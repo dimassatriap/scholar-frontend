@@ -1,5 +1,5 @@
 export const state = () => ({
-  scholarrData: {
+  scholarData: {
     id: null,
     name: null,
     phone: null,

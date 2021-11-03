@@ -1,4 +1,153 @@
 // Ref: https://github.com/nuxt-community/vuetify-module#customvariables
 //
 // The variables you want to modify
-// $font-size-root: 20px;
+
+$heading-font-family: 'Poppins', sans-serif;
+$body-font-family: 'Poppins', sans-serif;
+
+$red: (
+  'base': #d30000
+);
+
+$blue: (
+  'base': #3c91e6
+);
+
+$material-light: (
+  'text': (
+    'primary': #00171f,
+    'secondary': #847f82
+  ),
+  'text-fields': (
+    'filled': #f2f3f4
+  )
+);
+
+$btn-text-transform: none;
+$btn-letter-spacing: normal;
+
+$container-padding-x: 16px;
+// $grid-gutter: 32px;
+// $gutter: 32px;
+$form-grid-gutter: 16px;
+
+$btn-sizes: (
+  'small': 22,
+  'default': 34,
+  'large': 50
+);
+
+$btn-font-sizes: (
+  'small': 14px,
+  'default': 14px,
+  'large': 14px
+);
+
+$fab-sizes: (
+  'small': 24,
+  'default': 32,
+  'large': 42,
+  'x-large': 56
+);
+
+$tab-font-size: 14px;
+$tabs-bar-height: 50px;
+$tabs-item-padding: 0;
+$tab-font-weight: 400;
+$tabs-item-min-width: 50px;
+$tabs-item-letter-spacing: normal;
+
+$card-border-radius: 8px;
+$card-actions-padding: 0 16px 16px 16px;
+
+$dialog-card-title-padding: 16px;
+$dialog-card-title-font-size: 18px;
+$dialog-card-title-font-weight: 600;
+$dialog-card-text-padding: 16px;
+$dialog-card-actions-padding: 16px;
+$dialog-card-title-letter-spacing: normal;
+
+$text-field-filled-full-width-outlined-slot-min-height: 48px;
+$text-field-enclosed-prepend-append-margin-top: 12px;
+$text-field-append-prepend-margin: 8px;
+
+$textarea-box-enclosed-single-outlined-margin-top: 12px;
+$text-field-enclosed-details-padding: 0 16px;
+
+$snackbar-wrapper-min-width: 280px;
+$snackbar-wrapper-min-height: 32px;
+$snackbar-content-font-size: 12px;
+$snackbar-content-padding: 8px;
+$snackbar-background-color: rgb(113, 115, 115, 0.9);
+
+$bottom-nav-btn-min-width: 50px;
+
+$expansion-panel-border-radius: 8px;
+
+$badge-height: 24px;
+$badge-min-width: 24px;
+$badge-border-radius: 50%;
+
+.v-btn {
+  font-family: 'Poppins', sans-serif;
+}
+
+.v-btn:not(.v-btn--round).v-size--large {
+  // height: 50px;
+  padding: 0 24px;
+}
+
+// .v-btn:not(.v-btn--round).v-size--default {
+//   height: 34px;
+// }
+
+.v-btn:not(.v-btn--round).v-size--small {
+  // height: 26px;
+  padding: 0 8px;
+}
+
+.v-tab {
+  text-transform: none;
+}
+
+.theme--light.v-icon {
+  color: #847f82;
+}
+
+.theme--light.v-list-item:not(.v-list-item--active):not(.v-list-item--disabled) {
+  color: #847f82 !important;
+}
+
+.theme--light.v-text-field--outlined:not(.v-input--is-focused):not(.v-input--has-state)
+  > .v-input__control
+  > .v-input__slot
+  fieldset {
+  color: #d6d4d5;
+}
+
+.v-skeleton-loader__image {
+  min-height: 200px;
+  height: 100% !important;
+}
+
+input,
+select,
+textarea {
+  font-family: 'Lato', sans-serif;
+}
+
+.v-textarea.v-text-field--box.v-text-field--single-line:not(.v-input--dense) .v-text-field__prefix,
+.v-textarea.v-text-field--box.v-text-field--single-line:not(.v-input--dense) .v-text-field__suffix,
+.v-textarea.v-text-field--box.v-text-field--single-line:not(.v-input--dense) textarea,
+.v-textarea.v-text-field--box.v-text-field--outlined:not(.v-input--dense) .v-text-field__prefix,
+.v-textarea.v-text-field--box.v-text-field--outlined:not(.v-input--dense) .v-text-field__suffix,
+.v-textarea.v-text-field--box.v-text-field--outlined:not(.v-input--dense) textarea,
+.v-textarea.v-text-field--enclosed.v-text-field--single-line:not(.v-input--dense) .v-text-field__prefix,
+.v-textarea.v-text-field--enclosed.v-text-field--single-line:not(.v-input--dense) .v-text-field__suffix,
+.v-textarea.v-text-field--enclosed.v-text-field--single-line:not(.v-input--dense) textarea,
+.v-textarea.v-text-field--enclosed.v-text-field--outlined:not(.v-input--dense) .v-text-field__prefix,
+.v-textarea.v-text-field--enclosed.v-text-field--outlined:not(.v-input--dense) .v-text-field__suffix,
+.v-textarea.v-text-field--enclosed.v-text-field--outlined:not(.v-input--dense) textarea {
+  margin-top: 8px;
+  margin-bottom: 8px;
+}
