@@ -5,7 +5,7 @@
         <v-col :cols="containerCol.cols" :sm="containerCol.sm" :md="containerCol.md" :lg="containerCol.lg">
           <v-card class="shadow-sm-card-sm">
             <v-container class="pa-0">
-              <v-row no-gutters>
+              <v-row no-gutters class="rounded-inherit">
                 <v-col
                   :cols="sideCol.col"
                   :sm="sideCol.sm"
@@ -20,13 +20,13 @@
                     white--text
                     pa-4 pa-sm-6
                   "
-                  :class="{ 'radius-inherit-left': isSmAndUp }"
+                  :class="{ 'rounded-l-inherit': isSmAndUp }"
                   style="min-height: 180px"
                 >
-                  <h2 class="mb-2">{{ myMerchant.title }}</h2>
-                  <div class="text-body2">{{ myMerchant.tagline }}</div>
+                  <h2 class="mb-2">{{ $helpers.getBusinessInfo().title }}</h2>
+                  <div class="text-body2">{{ $helpers.getBusinessInfo().tagline }}</div>
                 </v-col>
-                <v-col :cols="contentCol.cols" :sm="contentCol.sm" :class="{ 'radius-inherit-right': isSmAndUp }">
+                <v-col :cols="contentCol.cols" :sm="contentCol.sm" :class="{ 'rounded-r-inherit': isSmAndUp }">
                   <slot></slot>
                 </v-col>
               </v-row>
@@ -78,25 +78,13 @@ export default {
     return {}
   },
 
-  computed: {
-    myMerchant() {
-      return this.$store.state.merchant.myMerchant
-    }
-  },
+  computed: {},
 
   mounted() {}
 }
 </script>
 
 <style lang="stylus" scoped>
-.radius-inherit-left
-  border-bottom-left-radius inherit
-  border-top-left-radius inherit
-
-.radius-inherit-right
-  border-bottom-right-radius inherit
-  border-top-right-radius inherit
-
 .bg-pattern
   background-image url('~assets/images/auth/side-bg-pattern-up.png'), url('~assets/images/auth/side-bg-pattern-down.png')
   background-size contain

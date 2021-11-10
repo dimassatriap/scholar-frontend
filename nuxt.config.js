@@ -35,11 +35,6 @@ export default {
       '~/components/section/layout',
       '~/components/section/layout/footer',
       '~/components/section/store',
-      '~/components/section/product',
-      '~/components/section/product/card',
-      '~/components/section/product/detail',
-      '~/components/section/product/detail/preview',
-      '~/components/section/product/filter',
       '~/components/section/products',
       '~/components/section/products/navigation',
       '~/components/section/info'
@@ -68,7 +63,9 @@ export default {
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
-  axios: {},
+  axios: {
+    baseURL: process.env.API_URL
+  },
 
   // Vuetify module configuration (https://go.nuxtjs.dev/config-vuetify)
   vuetify: {

@@ -169,8 +169,8 @@ export default {
     dark: false,
     themes: {
       light: {
-        primary: '#1976D2',
-        accent: '#82B1FF',
+        primary: '#2A4486',
+        accent: '#e5e6ec',
         secondary: '#424242',
         info: '#00A1E4',
         warning: '#F5B700',

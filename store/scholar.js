@@ -15,11 +15,11 @@ export const getters = {
 }
 
 export const mutations = {
-  SET_MEMBER(state, payload) {
+  SET_SCHOLAR(state, payload) {
     state.scholarData = payload
   },
 
-  CLEAR_MEMBER(state) {
+  CLEAR_SCHOLAR(state) {
     const scholarData = {
       id: null,
       name: null,

@@ -702,5 +702,13 @@ export default ({ app }, inject) => {
     }
   }
 
+  helper.getBusinessInfo = () => {
+    const business = {
+      title: 'Scholar Unpad',
+      tagline: 'Portal Riset Universitas Padjadjaran'
+    }
+    return business
+  }
+
   inject('helpers', helper)
 }
