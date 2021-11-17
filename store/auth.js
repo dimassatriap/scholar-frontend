@@ -1,11 +1,23 @@
 export const state = () => ({
   token: null,
-  account: {}
+  account: {
+    id: null,
+    username: null,
+    email: null
+  }
 })
 
 export const getters = {
   getAuthData(state) {
     return state
+  },
+
+  getAccount(state) {
+    return state.account
+  },
+
+  getToken(state) {
+    return state.token
   }
 }
 
@@ -17,7 +29,11 @@ export const mutations = {
 
   CLEAR_ACCOUNT(state) {
     state.token = null
-    state.account = {}
+    state.account = {
+      id: null,
+      username: null,
+      email: null
+    }
   }
 }
 

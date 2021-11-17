@@ -4,7 +4,9 @@ export const state = () => ({
     name: null,
     phone: null,
     address: null,
-    gender: null
+    gender: null,
+    birthDate: null,
+    accountId: null
   }
 })
 
@@ -25,7 +27,9 @@ export const mutations = {
       name: null,
       phone: null,
       address: null,
-      gender: null
+      gender: null,
+      birthDate: null,
+      accountId: null
     }
     state.scholarData = scholarData
   }

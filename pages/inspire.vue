@@ -1,22 +1,6 @@
 <template>
   <div class="my-4 my-sm-10">
-    <v-container class="pa-0">
-      <v-row no-gutters>
-        <v-col cols="12">
-          <BannerSlider v-model="banners" key-img-dekstop="imgD" key-img-mobile="imgM" key-src="src" />
-        </v-col>
-      </v-row>
-    </v-container>
     <v-container>
-      <v-row justify="center">
-        <v-col cols="12">
-          <CategorySlider v-model="categories" />
-        </v-col>
-        <v-col cols="12">
-          <SquareBannerSlider v-model="squareBanner" img-key="src" />
-        </v-col>
-      </v-row>
-
       <v-row>
         <v-col cols="12" sm="6" class="pa-sm-8">
           <div v-for="(cols, i) in colors" :key="`colors-${i}`" class="mb-8">
@@ -306,6 +290,23 @@
             </v-card-text>
             <v-card-text class="pa-2 text-center"> {{ icon }} </v-card-text>
           </v-card>
+        </v-col>
+      </v-row>
+    </v-container>
+
+    <v-container class="pa-0">
+      <v-row no-gutters>
+        <v-col cols="12">
+          <BannerSlider v-model="banners" key-img-dekstop="imgD" key-img-mobile="imgM" key-src="src" />
+        </v-col>
+      </v-row>
+
+      <v-row justify="center">
+        <v-col cols="12">
+          <CategorySlider v-model="categories" />
+        </v-col>
+        <v-col cols="12">
+          <SquareBannerSlider v-model="squareBanner" img-key="src" />
         </v-col>
       </v-row>
     </v-container>

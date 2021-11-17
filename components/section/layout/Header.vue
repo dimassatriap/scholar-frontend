@@ -162,10 +162,9 @@
 
 <script>
 import breakpointMixin from '~/mixins/breakpoint'
-import userData from '~/mixins/user-data'
 
 export default {
-  mixins: [breakpointMixin, userData],
+  mixins: [breakpointMixin],
   data() {
     return {
       drawer: false,

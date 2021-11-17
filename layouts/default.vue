@@ -12,7 +12,13 @@
         </v-list-item>
 
         <template>
-          <v-list-item v-for="(item, i) in authItems" :key="'authItems' + i" :to="item.to" router exact>
+          <v-list-item
+            v-for="(item, i) in account.id ? accountScholarItems : authItems"
+            :key="'accountItems' + i"
+            :to="item.to"
+            router
+            exact
+          >
             <v-list-item-action>
               <v-icon>{{ item.icon }}</v-icon>
             </v-list-item-action>
@@ -31,9 +37,7 @@
     </v-app-bar>
 
     <v-main>
-      <v-container class="pa-0 pa-sm-4">
-        <nuxt />
-      </v-container>
+      <nuxt />
     </v-main>
 
     <v-footer :absolute="true" app>
@@ -47,26 +51,28 @@
 <script>
 import allLayoutMixins from '~/mixins/all-layout'
 import breakpointMixin from '~/mixins/breakpoint'
+import accountScholarMixins from '~/mixins/account-scholar'
 
 export default {
-  mixins: [allLayoutMixins, breakpointMixin],
+  mixins: [allLayoutMixins, breakpointMixin, accountScholarMixins],
   data() {
     return {
       clipped: false,
       drawer: false,
       fixed: false,
       items: [
+        // {
+        //   icon: 'mdi-chart-bubble',
+        //   title: 'Inspire',
+        //   to: '/inspire'
+        // },
         {
           icon: 'mdi-apps',
           title: 'Welcome',
           to: '/'
-        },
-        {
-          icon: 'mdi-chart-bubble',
-          title: 'Inspire',
-          to: '/inspire'
         }
       ],
+
       authItems: [
         {
           icon: 'mdi-login-variant',
@@ -79,8 +85,24 @@ export default {
           to: '/register'
         }
       ],
+
+      accountScholarItems: [
+        {
+          icon: 'mdi-account',
+          title: 'Akun',
+          to: '/akun/scholar'
+        },
+        {
+          icon: 'mdi-logout',
+          title: 'Logout',
+          to: '/logout'
+        }
+      ],
+
       miniVariant: false
     }
-  }
+  },
+
+  mounted() {}
 }
 </script>
