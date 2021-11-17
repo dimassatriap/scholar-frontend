@@ -10,6 +10,6 @@ export default ($axios) => ({
   },
 
   register(payload) {
-    return $axios.post('auth/register', payload)
+    return $axios.post(endpoint + 'register', payload)
   }
 })

@@ -14,7 +14,7 @@
             </YBtn>
           </div>
         </div>
-        <h3 class="mt-8 mb-6">Daftar Akun Baru</h3>
+        <h3 class="mt-8 mb-6">Daftar Akun Scholar</h3>
 
         <MessageInfo
           :messages.sync="errorMessage"
@@ -27,11 +27,20 @@
         <v-form ref="form" v-model="form.isValid" lazy-validation @submit.prevent="submit">
           <YInput
             id="name"
-            v-model="form.nameFull"
+            v-model="form.name"
             placeholder="Masukan Nama lengkap"
             label="Nama Lengkap"
             class="mb-4"
             :rules="$helpers.formRules('required-name')"
+          />
+
+          <YInput
+            id="input-username"
+            v-model="form.username"
+            placeholder="Masukan Username"
+            label="Username"
+            class="mb-4"
+            :rules="$helpers.formRules('required')"
           />
 
           <YInput
@@ -45,7 +54,7 @@
 
           <YInput
             id="phone"
-            v-model="form.msisdn"
+            v-model="form.phone"
             placeholder="Masukan No. Handphone"
             label="No. Handphone"
             class="mb-4"
@@ -78,11 +87,13 @@ export default {
     return {
       fromRoute: '',
       form: {
-        email: null,
-        isValid: false,
-        nameFull: '',
+        username: null,
         password: null,
-        msisdn: null
+        email: null,
+        name: '',
+        phone: null,
+        accountId: null,
+        isValid: false
       },
       loading: false,
       errorMessage: {}
@@ -106,24 +117,85 @@ export default {
         this.errorMessage = {}
         const form = {
           ...this.form,
-          msisdn: 0 + this.form.msisdn,
-          repeatPassword: this.form.password
+          phone: 62 + this.form.phone
         }
+
         try {
-          const a = await this.$repo.member.postRegisterMember(form)
-          const res = a.data.response
-          if (res && res.status) {
-            this.$YAlert.show({ content: 'Akun berhasil dibuat.', timeout: '3000' })
-            this.$router.push('/login')
-            return res.results
-          } else {
-            this.errorMessage = this.$helpers.keysToCamel(res.messages)
+          const res1 = await this.postAccount(form)
+          if (res1.status) {
+            form.accountId = res1.results.id
+            const res2 = await this.postScholar(form)
+            if (res2.status) {
+              this.getScholarById(res2.results.id)
+              this.login(form)
+            }
           }
-        } catch (e) {
+        } catch (error) {
         } finally {
           this.loading = false
         }
       }
+    },
+
+    async postAccount(form) {
+      try {
+        const a = await this.$repo.auth.register(form)
+        const res = a.data
+        if (res && res.status) {
+          this.$YAlert.show({ content: 'Account berhasil dibuat.', timeout: '3000' })
+          return res
+        } else {
+          this.errorMessage = this.$helpers.keysToCamel(res.messages)
+        }
+      } catch (e) {
+        const res = e.response.data
+        this.errorMessage = this.$helpers.keysToCamel(res.messages)
+      }
+    },
+
+    async postScholar(form) {
+      try {
+        const a = await this.$repo.scholar.create(form)
+        const res = a.data
+        if (res && res.status) {
+          this.$YAlert.show({ content: 'Scholar berhasil dibuat.', timeout: '3000' })
+          this.$store.commit('scholar/SET_SCHOLAR', res.results)
+          return res
+        } else {
+          this.errorMessage = this.$helpers.keysToCamel(res.messages)
+        }
+      } catch (e) {
+        const res = e.response.data
+        this.errorMessage = this.$helpers.keysToCamel(res.messages)
+      }
+    },
+
+    async login(form) {
+      try {
+        const a = await this.$repo.auth.login(form)
+        const res = a.data
+        if (res && res.status) {
+          this.$store.dispatch('auth/saveAccount', res.results)
+          // await this.$store.dispatch('auth/initAuth', this.$route)
+
+          this.$router.push('/')
+        } else {
+          this.errorMessage = this.$helpers.keysToCamel(res.messages)
+        }
+      } catch (e) {
+        const res = e.response.data
+        this.errorMessage = this.$helpers.keysToCamel(res.messages)
+      }
+    },
+
+    async getScholarById(id) {
+      try {
+        const a = await this.$repo.scholar.getScholarById(id)
+        const res = a.data
+        if (res && res.status) {
+          this.$store.commit('scholar/SET_SCHOLAR', res.results)
+        }
+      } catch (e) {}
     }
   }
 }

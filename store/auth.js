@@ -11,7 +11,6 @@ export const getters = {
 
 export const mutations = {
   SET_ACCOUNT(state, payload) {
-    console.log('payload: ', payload)
     state.account = payload.account
     state.token = payload.token
   },

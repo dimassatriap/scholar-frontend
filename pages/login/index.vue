@@ -93,14 +93,13 @@ export default {
           if (res && res.status) {
             this.$store.dispatch('auth/saveAccount', res.results)
             // await this.$store.dispatch('auth/initAuth', this.$route)
-            this.$YAlert.show({ content: 'Login berhasil.', timeout: '3000' })
+            this.$YAlert.show({ content: res.messages, timeout: '3000' })
 
-            this.$helpers.handleBack(this.fromRoute)
+            this.$router.push('/')
           } else {
             this.errorMessage = this.$helpers.keysToCamel(res.messages)
           }
         } catch (e) {
-          console.log('e: ', e)
           const res = e.response.data
           this.errorMessage = this.$helpers.keysToCamel(res.messages)
         } finally {

@@ -1,7 +1,7 @@
 import authentication from './authentication'
-import account from './account'
+import scholar from './scholar'
 
 export default ($axios) => ({
   auth: authentication($axios),
-  account: account($axios)
+  scholar: scholar($axios)
 })
