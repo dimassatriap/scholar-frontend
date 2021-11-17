@@ -13,7 +13,7 @@
 
         <template>
           <v-list-item
-            v-for="(item, i) in account.id ? accountScholarItems : authItems"
+            v-for="(item, i) in isLogin ? accountScholarItems : authItems"
             :key="'accountItems' + i"
             :to="item.to"
             router

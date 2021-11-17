@@ -92,6 +92,7 @@ export default {
           const res = a.data
           if (res && res.status) {
             this.$store.dispatch('auth/saveAccount', res.results)
+            this.$store.commit('scholar/SET_SCHOLAR', res.results.account.scholar)
             // await this.$store.dispatch('auth/initAuth', this.$route)
             this.$YAlert.show({ content: res.messages, timeout: '3000' })
 

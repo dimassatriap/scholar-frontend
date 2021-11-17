@@ -48,6 +48,6 @@ export const actions = {
   logout(vuexContext) {
     vuexContext.commit('CLEAR_ACCOUNT')
     vuexContext.commit('scholar/CLEAR_SCHOLAR', null, { root: true })
-    this.$router.push('/login')
+    this.$router.push('/')
   }
 }
