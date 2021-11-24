@@ -90,7 +90,7 @@ export default {
         {
           icon: 'mdi-account',
           title: 'Akun',
-          to: '/akun/scholar'
+          to: '/scholar/profile'
         },
         {
           icon: 'mdi-logout',

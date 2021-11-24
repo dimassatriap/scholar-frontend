@@ -457,7 +457,7 @@ export default ({ app }, inject) => {
       case 'FEMALE':
         return 'Perempuan'
       default:
-        return 'Belum Terdefinisi'
+        return 'Belum diisi'
     }
   }
 

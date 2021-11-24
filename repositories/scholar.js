@@ -7,5 +7,9 @@ export default ($axios) => ({
 
   getScholarById(id) {
     return $axios.get(endpoint + id)
+  },
+
+  updateScholar(id, payload) {
+    return $axios.put(endpoint + id, payload)
   }
 })

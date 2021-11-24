@@ -37,6 +37,7 @@ export default {
       '~/components/section/store',
       '~/components/section/products',
       '~/components/section/products/navigation',
+      '~/components/section/account',
       '~/components/section/info'
     ]
   },
