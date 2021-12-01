@@ -20,7 +20,7 @@ export default {
 
   computed: {
     isLogin() {
-      return !!this.account.id && !!this.scholar.id
+      return !!this.account && !!this.account.id && !!this.scholar && !!this.scholar.id
     }
   },
 

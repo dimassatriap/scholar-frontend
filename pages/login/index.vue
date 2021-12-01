@@ -91,12 +91,16 @@ export default {
           const a = await this.$repo.auth.login(this.form)
           const res = a.data
           if (res && res.status) {
-            this.$store.dispatch('auth/saveAccount', res.results)
-            this.$store.commit('scholar/SET_SCHOLAR', res.results.account.scholar)
-            // await this.$store.dispatch('auth/initAuth', this.$route)
-            this.$YAlert.show({ content: res.messages, timeout: '3000' })
+            if (res.results.account.scholar) {
+              this.$store.dispatch('auth/saveAccount', res.results)
+              this.$store.commit('scholar/SET_SCHOLAR', res.results.account.scholar)
+              // await this.$store.dispatch('auth/initAuth', this.$route)
+              this.$YAlert.show({ content: res.messages, timeout: '3000' })
 
-            this.$router.push('/')
+              this.$router.push('/')
+            } else {
+              this.$YAlert.show({ content: 'Data Scholar Akun tersebut tidak ditemukan.', timeout: '3000' })
+            }
           } else {
             this.errorMessage = this.$helpers.keysToCamel(res.messages)
           }

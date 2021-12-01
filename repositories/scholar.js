@@ -5,6 +5,10 @@ export default ($axios) => ({
     return $axios.post(endpoint, payload)
   },
 
+  getScholars(payload) {
+    return $axios.get('scholar', { params: payload })
+  },
+
   getScholarById(id) {
     return $axios.get(endpoint + id)
   },
