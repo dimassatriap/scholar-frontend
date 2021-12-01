@@ -26,6 +26,11 @@
                 </div>
               </v-col>
             </v-row>
+
+            <div class="mt-4 text-body2 rounded-4 border pa-4">
+              <div class="">Alamat</div>
+              <div class="mt-1">{{ scholar.address }}</div>
+            </div>
           </div>
         </div>
 

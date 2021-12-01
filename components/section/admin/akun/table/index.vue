@@ -24,13 +24,11 @@
           ></v-text-field>
           <v-spacer></v-spacer>
           <v-btn color="primary" dark class="mb-2" @click="showDialog"> Akun Baru </v-btn>
-          <v-dialog v-model="dialog" max-width="500px" eager>
+          <v-dialog v-model="dialog" max-width="600px" eager>
             <v-card>
-              <v-card-title>
-                <span class="text-h5">{{ formTitle }}</span>
-              </v-card-title>
+              <v-card-text class="text--primary">
+                <h3 class="mb-4">{{ formTitle }}</h3>
 
-              <v-card-text>
                 <MessageInfo
                   :messages.sync="errorMessage"
                   class="mb-4"
@@ -48,7 +46,6 @@
                           v-model="editedItem.username"
                           placeholder="Masukan Username"
                           label="Username"
-                          class="mb-4"
                           :rules="$helpers.formRules('required')"
                         />
                       </v-col>
@@ -58,7 +55,6 @@
                           v-model="editedItem.email"
                           placeholder="Masukan Email"
                           label="Email"
-                          class="mb-4"
                           :rules="$helpers.formRules('email')"
                         />
                       </v-col>
@@ -69,7 +65,6 @@
                           placeholder="Masukan Kata Sandi"
                           label="Kata Sandi"
                           hint="Minimal 6 Karakter"
-                          class="mb-4"
                           password
                           :rules="$helpers.formRules('password')"
                         />
@@ -86,7 +81,7 @@
               </v-card-actions>
             </v-card>
           </v-dialog>
-          <v-dialog v-model="dialogDelete" max-width="500px">
+          <v-dialog v-model="dialogDelete" max-width="600px">
             <v-card>
               <v-card-title class="">Apakah anda yakin untuk menghapus akun ini?</v-card-title>
               <MessageInfo

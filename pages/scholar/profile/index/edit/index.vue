@@ -115,7 +115,7 @@
           <div class="text-truncate">
             <label for="gender" class="text-body2 sblack60--text">Jenis Kelamin</label>
           </div>
-          <v-radio-group v-model="form.gender" class="mt-0" row hide-details="auto">
+          <v-radio-group v-model="form.gender" class="mt-0 mb-4" row hide-details="auto">
             <v-radio
               v-for="(gender, i) in genderSelection"
               :key="'gender' + i"
@@ -123,6 +123,20 @@
               :value="gender.value"
             ></v-radio>
           </v-radio-group>
+
+          <div class="mb-1 text-truncate">
+            <label for="input-street-address" class="text-body2 sblack60--text"> Detail Alamat </label>
+          </div>
+          <v-textarea
+            id="input-street-address"
+            v-model="form.address"
+            placeholder="Masukan Jalan, No Rumah/Gedung, RT/RW, Desa/Kelurahan"
+            :rows="isXs ? 2 : 1"
+            auto-grow
+            filled
+            outlined
+            hide-details="auto"
+          ></v-textarea>
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -204,6 +218,7 @@ export default {
         this.form.birthDate = this.$moment(this.scholar.birthDate).format('YYYY-MM-DD')
       }
       this.form.gender = this.scholar.gender
+      this.form.address = this.scholar.address
     },
 
     previewFile(src) {

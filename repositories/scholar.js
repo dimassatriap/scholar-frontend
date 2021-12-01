@@ -15,5 +15,9 @@ export default ($axios) => ({
 
   updateScholar(id, payload) {
     return $axios.put(endpoint + id, payload)
+  },
+
+  delete(id, payload) {
+    return $axios.delete(endpoint + id, payload)
   }
 })
