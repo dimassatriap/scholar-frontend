@@ -104,6 +104,12 @@ export default ({ app }, inject) => {
           (v) => (typeof v === 'string' && v.trim().length > 0) || 'Tidak Valid',
           (v) => /^[A-Za-z/\s.'-]+$/.test(v) || 'Format tidak valid.'
         ]
+      case 'required-general-name':
+        return [
+          (v) => !!v || 'harus diisi.',
+          (v) => (typeof v === 'string' && v.trim().length > 0) || 'Tidak Valid',
+          (v) => /^[A-Za-z/\s.()<>*=#%+'@!&0-9_-]+$/.test(v) || 'Format tidak valid.'
+        ]
       case 'required':
         return [(v) => !!v || 'Harus diisi.']
       case 'name':
@@ -612,92 +618,91 @@ export default ({ app }, inject) => {
   }
 
   helper.shareWA = (text, url) => {
-    if (process.client){
+    if (process.client) {
       helper.openLink(`https://api.whatsapp.com/send?text=${text} ${url}`)
     }
   }
 
   helper.shareFB = (text, url) => {
-    if (process.client){
+    if (process.client) {
       helper.openLink(`https://www.facebook.com/share.php?u=${url}&quote=${text}`)
     }
   }
 
   helper.shareTwitter = (text, url) => {
-    if (process.client){
+    if (process.client) {
       helper.openLink(`https://twitter.com/intent/tweet?text=${text} ${url}`)
     }
   }
 
   helper.shareLine = (text, url) => {
-    if (process.client){
+    if (process.client) {
       helper.openLink(`https://line.me/R/msg/text/?${text} ${url}`)
     }
   }
 
   helper.shareTelegram = (text, url) => {
-    if (process.client){
+    if (process.client) {
       helper.openLink(`https://telegram.me/share/url?url=${url}&text=${text}`)
     }
   }
 
   helper.shareLinkedin = (text, url) => {
-    if (process.client){
+    if (process.client) {
       helper.openLink(`https://www.linkedin.com/sharing/share-offsite/?url=${url}`)
     }
   }
 
   helper.openMail = (email) => {
-    if (process.client){
+    if (process.client) {
       helper.openLink(`mailto:${email}`)
     }
   }
 
   helper.openPhone = (number) => {
-    if (process.client){
+    if (process.client) {
       helper.openLink(`tel:${number}`)
     }
   }
 
   helper.openAddress = (address) => {
-    if (process.client){
+    if (process.client) {
       helper.openLink(`https://www.google.com/search?q=${address}`)
     }
   }
 
   helper.openGoogleSearch = (search) => {
-    if (process.client){
+    if (process.client) {
       helper.openLink(`https://www.google.com/search?q=${search}`)
     }
   }
 
   helper.openWA = (number) => {
-    if (process.client){
+    if (process.client) {
       helper.openLink(`https://wa.me/${number}/`)
     }
   }
 
   helper.openLine = (id) => {
-    if (process.client){
+    if (process.client) {
       helper.openLink(`https://line.me/R/ti/p/~${id}/`)
     }
   }
 
   helper.openTelegram = (id) => {
-    if (process.client){
+    if (process.client) {
       helper.openLink(`https://t.me/${id}/`)
     }
   }
 
   helper.openInstagram = (username) => {
-    if (process.client){
+    if (process.client) {
       helper.openLink(`https://www.instagram.com/${username}/`)
     }
   }
 
-
   helper.openLinkedin = (username) => {
-    if (process.client){
+    if (process.client) {
       helper.openLink(`https://www.linkedin.com/company/${username}/`)
     }
   }

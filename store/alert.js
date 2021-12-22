@@ -17,5 +17,5 @@ export const mutations = {
 
   closeAll() {},
 
-  cartChanged() {}
+  scholarPublicationChanged() {}
 }

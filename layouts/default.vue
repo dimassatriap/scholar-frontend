@@ -93,6 +93,11 @@ export default {
           to: '/scholar/profile'
         },
         {
+          icon: 'mdi-clipboard-text',
+          title: 'Research',
+          to: '/scholar/research/publication'
+        },
+        {
           icon: 'mdi-logout',
           title: 'Logout',
           to: '/logout'
