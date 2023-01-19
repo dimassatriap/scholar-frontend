@@ -25,38 +25,61 @@
         />
 
         <v-form ref="form" v-model="isValid" lazy-validation>
-          <YInput
-            id="publication-name"
-            v-model="form.name"
-            placeholder="Masukan Nama Publikasi"
-            label="Nama Publikasi"
-            class="mb-4"
-            :rules="$helpers.formRules('required-general-name')"
-          />
+          <v-container>
+            <v-row dense>
+              <v-col cols="12">
+                <YInput
+                  id="publication-name"
+                  v-model="form.name"
+                  placeholder="Masukan Nama Publikasi"
+                  label="Nama Publikasi"
+                  :rules="$helpers.formRules('required-general-name')"
+                />
+              </v-col>
 
-          <YInput
-            id="input-journal"
-            v-model="form.journal"
-            placeholder="Masukan Nama Jurnal"
-            label="Jurnal"
-            class="mt-4"
-            :rules="$helpers.formRules('required')"
-          />
+              <v-col cols="12" sm="6">
+                <YInput id="publication-language" v-model="form.language" placeholder="Masukan Bahasa" label="Bahasa" />
+              </v-col>
 
-          <div class="mt-4 mb-1 text-truncate">
-            <label for="input-abstraction" class="text-body2 sblack60--text"> Abstrak </label>
-          </div>
-          <v-textarea
-            id="input-abstraction"
-            v-model="form.abstract"
-            placeholder="Masukan Abstrak"
-            :rows="isXs ? 2 : 1"
-            auto-grow
-            filled
-            outlined
-            :rules="$helpers.formRules('required')"
-            hide-details="auto"
-          ></v-textarea>
+              <v-col cols="6" sm="6">
+                <YInput
+                  id="publication-total-pages"
+                  v-model="form.totalPages"
+                  placeholder="Masukan Total Halaman"
+                  label="Total Halaman"
+                  type="number"
+                />
+              </v-col>
+
+              <v-col cols="12">
+                <YInput
+                  id="input-journal"
+                  v-model="form.journal"
+                  placeholder="Masukan Nama Jurnal"
+                  label="Jurnal"
+                  class="mt-4"
+                  :rules="$helpers.formRules('required')"
+                />
+              </v-col>
+
+              <v-col cols="12">
+                <div class="mt-4 mb-1 text-truncate">
+                  <label for="input-abstraction" class="text-body2 sblack60--text"> Abstrak </label>
+                </div>
+                <v-textarea
+                  id="input-abstraction"
+                  v-model="form.abstract"
+                  placeholder="Masukan Abstrak"
+                  :rows="isXs ? 2 : 1"
+                  auto-grow
+                  filled
+                  outlined
+                  :rules="$helpers.formRules('required')"
+                  hide-details="auto"
+                ></v-textarea>
+              </v-col>
+            </v-row>
+          </v-container>
         </v-form>
       </v-card-text>
       <v-card-actions>
@@ -92,6 +115,8 @@ export default {
       id: null,
       name: null,
       abstract: null,
+      language: null,
+      totalPages: null,
       journal: null,
       scholarId: null
     }
@@ -131,6 +156,8 @@ export default {
         id: null,
         name: null,
         abstract: null,
+        language: null,
+        totalPages: null,
         journal: null
       }
 
@@ -141,6 +168,8 @@ export default {
       this.form.id = publication.id
       this.form.name = publication.name
       this.form.abstract = publication.abstract
+      this.form.language = publication.language
+      this.form.totalPages = publication.totalPages
       this.form.journal = publication.journal
     },
 
@@ -148,7 +177,7 @@ export default {
       if (this.$refs.form.validate()) {
         this.isSubmitLoading = true
         this.errorMessage = {}
-        console.log('this.form: ', this.form)
+        // console.log('this.form: ', this.form)
         try {
           const a = this.isEdit
             ? await this.$repo.scholar.updatePublication(this.form.id, this.form)
