@@ -75,6 +75,11 @@ export default {
           icon: 'mdi-book-open-page-variant',
           title: 'Research Output',
           to: '/research'
+        },
+        {
+          icon: 'mdi-account-multiple',
+          title: 'Profiles',
+          to: '/profiles'
         }
       ],
 

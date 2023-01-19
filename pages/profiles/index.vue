@@ -1,30 +1,26 @@
 <template>
   <v-container class="">
-    <v-row justify="center" align="center">
+    <v-row>
       <v-col cols="12">
-        <h2 class="font-weight-medium">Find Research outputs</h2>
+        <h2 class="font-weight-medium">Find Profiles</h2>
 
         <v-text-field
-          id="publication-search"
+          id="scholar-search"
           v-model="search"
-          placeholder="Cari Publikasi"
+          placeholder="Cari Profile"
           outlined
           append-icon="mdi-magnify"
           class="mt-4"
         />
       </v-col>
 
-      <v-col v-for="(publication, i) in publications" :key="'publication' + i" cols="12">
-        <v-card elevation="0" outlined @click="$router.push(`/research/${publication.id}`)">
-          <v-card-title class="headline"> {{ publication.name }} </v-card-title>
+      <v-col v-for="(scholar, i) in scholars" :key="'scholar' + i" cols="12" sm="6" lg="4">
+        <v-card elevation="0" outlined @click="$router.push(`/profiles/${scholar.id}`)">
+          <v-card-title class="headline"> {{ scholar.name }} </v-card-title>
           <v-card-subtitle class="subtitle-1">
-            {{ publication.scholar.name }}
+            <div>{{ scholar.email }}</div>
+            <div>{{ $moment(scholar.createdAt).format('YYYY') + ' - ' + $moment().format('YYYY') }}</div>
           </v-card-subtitle>
-          <v-card-text>
-            <div class="ellipsis-2-lines">
-              {{ publication.abstract }}
-            </div>
-          </v-card-text>
         </v-card>
       </v-col>
     </v-row>
@@ -35,7 +31,7 @@
 export default {
   data() {
     return {
-      publications: [],
+      scholars: [],
       search: null
     }
   },
@@ -44,23 +40,23 @@ export default {
     search(newVal) {
       clearTimeout(this._searchTimerId)
       this._searchTimerId = setTimeout(() => {
-        this.fetchPublications(newVal)
+        this.fetchScholars(newVal)
       }, 1000)
     }
   },
 
   created() {
-    this.fetchPublications()
+    this.fetchScholars()
   },
 
   methods: {
-    async fetchPublications(search = null) {
+    async fetchScholars(search = null) {
       try {
         this.loading = true
-        const a = await this.$repo.publication.getPublications({ withScholars: true, search })
+        const a = await this.$repo.scholar.getScholars({ search })
         const res = a.data
         if (res && res.status) {
-          this.publications = res.results
+          this.scholars = res.results
           return res
         } else {
           // this.errorMessage = this.$helpers.keysToCamel(res.messages)
