@@ -294,7 +294,7 @@
       </v-row>
     </v-container>
 
-    <v-container class="pa-0">
+    <v-container class="">
       <v-row no-gutters>
         <v-col cols="12">
           <BannerSlider v-model="banners" key-img-dekstop="imgD" key-img-mobile="imgM" key-src="src" />

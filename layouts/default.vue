@@ -70,6 +70,11 @@ export default {
           icon: 'mdi-apps',
           title: 'Welcome',
           to: '/'
+        },
+        {
+          icon: 'mdi-book-open-page-variant',
+          title: 'Research Output',
+          to: '/research'
         }
       ],
 
@@ -89,12 +94,12 @@ export default {
       accountScholarItems: [
         {
           icon: 'mdi-account',
-          title: 'Akun',
+          title: 'Account',
           to: '/scholar/profile'
         },
         {
           icon: 'mdi-clipboard-text',
-          title: 'Research',
+          title: 'My Research',
           to: '/scholar/research/publication'
         },
         {

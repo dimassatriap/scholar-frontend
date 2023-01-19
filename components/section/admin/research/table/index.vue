@@ -329,7 +329,7 @@ export default {
 
   computed: {
     formTitle() {
-      return this.editedIndex === -1 ? 'Tambah Project' : 'Ubah Project'
+      return this.editedIndex === -1 ? 'Tambah Publikasi' : 'Ubah Publikasi'
     },
 
     formDateFormatted() {

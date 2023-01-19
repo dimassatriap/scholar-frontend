@@ -48,7 +48,7 @@ export default {
       navItems: [
         {
           icon: 'mdi-account',
-          title: 'Akun',
+          title: 'Account',
           to: '/admin/akun'
         },
         {
@@ -58,8 +58,8 @@ export default {
         },
         {
           icon: 'mdi-clipboard-edit',
-          title: 'Projects',
-          to: '/admin/projects'
+          title: 'Research',
+          to: '/admin/research'
         }
       ],
 
