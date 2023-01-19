@@ -60,7 +60,8 @@ export default {
     '@nuxtjs/axios',
     // https://go.nuxtjs.dev/pwa
     '@nuxtjs/pwa',
-    'nuxt-webfontloader'
+    'nuxt-webfontloader',
+    '@nuxtjs/cloudinary'
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)
@@ -85,6 +86,13 @@ export default {
     google: {
       families: ['Poppins:400,500,600,700', 'Lato:400,700']
     }
+  },
+
+  cloudinary: {
+    cloudName: process.env.CLOUDNAME,
+    apiKey: process.env.CLOUDINARY_API_KEY,
+    apiSecret: process.env.CLOUDINARY_API_SECRET,
+    secure: false
   },
 
   // https://www.npmjs.com/package/@nuxtjs/style-resources

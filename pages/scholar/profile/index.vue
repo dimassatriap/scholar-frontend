@@ -10,7 +10,7 @@
             <div class="text-capitalize">{{ scholar.name }}</div>
           </div>
           <div class="py-6 px-4 px-sm-6 white rounded-sm-b-8">
-            <YAvatar class="border-4-white mb-6" :src="account.avatar" size="104" style="margin-top: -76px" />
+            <YAvatar class="border-4-white mb-6" :src="scholar.image" size="104" style="margin-top: -76px" />
 
             <v-row :dense="isXs">
               <v-col v-for="(info, i) in scholarProfileInfo" :key="'scholarProfileInfo' + i" cols="12" sm="6">

@@ -39,7 +39,7 @@
                   :max-width="184"
                   :max-height="184"
                   class="rounded-4"
-                  :src="form.photo"
+                  :src="form.image"
                 />
               </v-badge>
             </template>
@@ -58,7 +58,7 @@
                   :max-width="184"
                   :max-height="184"
                   class="rounded-4"
-                  :src="previewFile(form.photo)"
+                  :src="previewFile(form.image)"
                 />
               </v-badge>
             </template>
@@ -165,6 +165,7 @@ export default {
     return {
       value: true,
       form: {
+        image: null,
         photo: null,
         name: null,
         birthDate: null,
@@ -199,6 +200,12 @@ export default {
 
     'metadataForm.menuBirthDate'(val) {
       val && setTimeout(() => (this.activePicker = 'YEAR'))
+    },
+
+    'form.photo'(val) {
+      if (val) {
+        this.uploadImage(val)
+      }
     }
   },
 
@@ -211,8 +218,35 @@ export default {
       this.$router.push('/scholar/profile')
     },
 
+    async uploadImage(val) {
+      const readData = (f) =>
+        new Promise((resolve) => {
+          const reader = new FileReader()
+          reader.onloadend = () => resolve(reader.result)
+          reader.readAsDataURL(f)
+        })
+
+      this.isSubmitLoading = true
+      try {
+        const data = await readData(val)
+
+        /* upload the converted data */
+        const instance = await this.$cloudinary.upload(data, {
+          folder: 'scholar',
+          uploadPreset: 'wiov1ewi'
+        })
+
+        if (instance.secure_url) {
+          this.form.image = instance.secure_url
+        }
+      } catch (error) {
+      } finally {
+        this.isSubmitLoading = false
+      }
+    },
+
     setForm() {
-      this.form.photo = this.scholar.avatar
+      this.form.image = this.scholar.image
       this.form.name = this.scholar.name
       if (this.scholar.birthDate) {
         this.form.birthDate = this.$moment(this.scholar.birthDate).format('YYYY-MM-DD')
@@ -237,15 +271,6 @@ export default {
       if (this.$refs.form.validate()) {
         this.isSubmitLoading = true
         this.errorMessage = {}
-
-        // const formData = new FormData()
-        // for (const key in this.form) {
-        //   // ignore if there's no changes in photo form
-        //   if (key === 'photo' && !(this.form[key] instanceof File)) {
-        //   } else {
-        //     formData.append(this.$helpers.toSnakeCase(key), this.form[key])
-        //   }
-        // }
 
         try {
           const a = await this.$repo.scholar.updateScholar(id, form)

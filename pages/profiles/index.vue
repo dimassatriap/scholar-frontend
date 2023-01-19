@@ -16,11 +16,19 @@
 
       <v-col v-for="(scholar, i) in scholars" :key="'scholar' + i" cols="12" sm="6" lg="4">
         <v-card elevation="0" outlined @click="$router.push(`/profiles/${scholar.id}`)">
-          <v-card-title class="headline"> {{ scholar.name }} </v-card-title>
-          <v-card-subtitle class="subtitle-1">
-            <div>{{ scholar.email }}</div>
-            <div>{{ $moment(scholar.createdAt).format('YYYY') + ' - ' + $moment().format('YYYY') }}</div>
-          </v-card-subtitle>
+          <v-list-item three-line>
+            <v-list-item-content>
+              <div class="text-h6">{{ scholar.name }}</div>
+              <v-list-item-title class="subtitle-1">
+                {{ scholar.email }}
+              </v-list-item-title>
+              <v-list-item-subtitle class="subtitle-1">
+                {{ $moment(scholar.createdAt).format('YYYY') + ' - ' + $moment().format('YYYY') }}
+              </v-list-item-subtitle>
+            </v-list-item-content>
+
+            <YAvatar class="border-4-white my-4 ml-4" :src="scholar.image" size="80" />
+          </v-list-item>
         </v-card>
       </v-col>
     </v-row>
