@@ -27,7 +27,7 @@
               </v-list-item-subtitle>
             </v-list-item-content>
 
-            <YAvatar class="border-4-white my-4 ml-4" :src="scholar.image" size="80" />
+            <YAvatar class="my-4 ml-4" :src="scholar.image" size="80" />
           </v-list-item>
         </v-card>
       </v-col>

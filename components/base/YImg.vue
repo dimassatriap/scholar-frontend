@@ -18,7 +18,11 @@
       <v-skeleton-loader v-if="(!errorProfileImg && src) || loading" type="image" />
       <div v-else>
         <v-img
-          :src="require(`~/assets/images/product/no-image.svg`)"
+          :src="
+            imgDefaultAsAvatar
+              ? require(`~/assets/images/user/avatar-default.png`)
+              : require(`~/assets/images/product/no-image.svg`)
+          "
           :aspect-ratio="aspectRatio"
           :width="width"
           :height="height"
@@ -82,6 +86,10 @@ export default {
       default: false
     },
     loading: {
+      type: Boolean,
+      default: false
+    },
+    imgDefaultAsAvatar: {
       type: Boolean,
       default: false
     }

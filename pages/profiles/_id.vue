@@ -1,28 +1,31 @@
 <template>
   <v-container class="">
-    <v-row>
-      <v-col cols="12">
-        <MessageInfo
-          :messages.sync="errorMessage"
-          class="mb-4"
-          card-class="sred20"
-          text-class="sblack--text"
-          icon-color="sred60"
-        />
+    <MessageInfo
+      :messages.sync="errorMessage"
+      class="mb-4"
+      card-class="sred20"
+      text-class="sblack--text"
+      icon-color="sred60"
+    />
 
+    <v-row align="center">
+      <v-col cols="3" sm="2">
+        <YImg class="rounded-lg" aspect-ratio="1" img-default-as-avatar :src="scholar.image" />
+      </v-col>
+
+      <v-col cols="9" sm="10">
         <h2 v-if="scholar.name" class="font-weight-medium">{{ scholar.name }}</h2>
 
-        <div v-if="scholar.email" class="mt-4 text-h6 text--secondary font-weight-regular">
+        <div v-if="scholar.email" class="text-h6 text--secondary font-weight-regular" style="word-break: break-all">
           {{ scholar.email }}
         </div>
 
         <div v-if="scholar.phone" class="mt-1 text-h6 text--secondary font-weight-regular">
           {{ 0 + $helpers.remove62FromMsisdn(scholar.phone) }}
         </div>
-
-        <v-divider class="mt-4 mb-6"></v-divider>
       </v-col>
     </v-row>
+    <v-divider class="mt-4 mb-6"></v-divider>
 
     <v-row v-if="scholar.address" no-gutters class="mt-2 font-weight-light">
       <v-col cols="12" sm="3" class="pr-3">

@@ -33,7 +33,7 @@
                   v-model="form.name"
                   placeholder="Masukan Nama Publikasi"
                   label="Nama Publikasi"
-                  :rules="$helpers.formRules('required-general-name')"
+                  :rules="$helpers.formRules('required')"
                 />
               </v-col>
 

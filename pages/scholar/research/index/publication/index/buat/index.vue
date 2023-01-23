@@ -17,7 +17,7 @@
         placeholder="Masukan Nama Publikasi"
         label="Nama Publikasi"
         class="mb-4"
-        :rules="$helpers.formRules('required-general-name')"
+        :rules="$helpers.formRules('required')"
       />
 
       <v-container class="pa-0">
