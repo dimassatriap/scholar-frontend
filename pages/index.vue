@@ -2,10 +2,32 @@
   <v-container class="">
     <v-row justify="center" align="center">
       <v-col cols="12" sm="8" md="6">
-        <div class="text-center pa-16">
+        <div class="text-center pt-16 px-16 pb-8">
           <YImg :src="require('~/assets/logos/logo-unpad.svg')"></YImg>
         </div>
-        <v-card>
+      </v-col>
+      <v-col cols="12" sm="10" md="8">
+        <v-card elevation="0" outlined>
+          <v-img height="250" :src="require(`~/assets/images/homepage/unpad-bg.jpeg`)">
+            <div class="fill-height d-flex flex-column justify-center align-center">
+              <div style="width: 70%">
+                <v-text-field
+                  id="publication-search"
+                  v-model="search"
+                  placeholder="Cari Riset"
+                  outlined
+                  append-icon="mdi-magnify"
+                  class="mt-4"
+                  background-color="rgba(255,255,255, 0.7)"
+                  hide-details
+                  rounded
+                  @click:append="findPublication"
+                  @keydown.enter.prevent="findPublication"
+                />
+              </div>
+            </div>
+          </v-img>
+
           <v-card-title class="headline"> Selamat datang di Portal Riset Universitas Padjadjaran </v-card-title>
           <v-card-text>
             <p>
@@ -25,6 +47,16 @@
 
 <script>
 export default {
-  components: {}
+  data() {
+    return {
+      search: null
+    }
+  },
+
+  methods: {
+    findPublication() {
+      this.$router.push({ path: '/research', query: { search: this.search } })
+    }
+  }
 }
 </script>

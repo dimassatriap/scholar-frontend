@@ -2,7 +2,7 @@
   <v-container class="">
     <v-row>
       <v-col cols="12">
-        <h2 class="font-weight-medium">Find Profiles</h2>
+        <h2 class="font-weight-medium">Temukan Profil</h2>
 
         <v-text-field
           id="scholar-search"

@@ -2,7 +2,7 @@
   <v-container class="">
     <v-row justify="center" align="center">
       <v-col cols="12">
-        <h2 class="font-weight-medium">Find Research outputs</h2>
+        <h2 class="font-weight-medium">Temukan Hasil Riset</h2>
 
         <v-text-field
           id="publication-search"
@@ -51,6 +51,13 @@ export default {
 
   created() {
     this.fetchPublications()
+  },
+
+  mounted() {
+    const search = this.$route.query.search
+    if (search) {
+      this.search = search
+    }
   },
 
   methods: {
