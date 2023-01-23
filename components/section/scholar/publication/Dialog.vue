@@ -41,7 +41,7 @@
                 <YInput id="publication-language" v-model="form.language" placeholder="Masukan Bahasa" label="Bahasa" />
               </v-col>
 
-              <v-col cols="6" sm="6">
+              <v-col cols="12" sm="6">
                 <YInput
                   id="publication-total-pages"
                   v-model="form.totalPages"
@@ -57,13 +57,12 @@
                   v-model="form.journal"
                   placeholder="Masukan Nama Jurnal"
                   label="Jurnal"
-                  class="mt-4"
                   :rules="$helpers.formRules('required')"
                 />
               </v-col>
 
               <v-col cols="12">
-                <div class="mt-4 mb-1 text-truncate">
+                <div class="mb-1 text-truncate">
                   <label for="input-abstraction" class="text-body2 sblack60--text"> Abstrak </label>
                 </div>
                 <v-textarea
