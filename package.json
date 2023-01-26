@@ -4,8 +4,7 @@
   "private": true,
   "scripts": {
     "dev": "nuxt",
-    "prebuild": "NODE_OPTIONS=--openssl-legacy-provider",
-    "build": "nuxt build",
+    "build": "cross-env NODE_OPTIONS=--openssl-legacy-provider nuxt build",
     "postbuild": "NODE_OPTIONS=--openssl-legacy-provider npm run build",
     "start": "nuxt start",
     "generate": "nuxt generate",
@@ -41,5 +40,8 @@
       "host": "0.0.0.0",
       "port": "3010"
     }
+  },
+  "devDependencies": {
+    "cross-env": "^7.0.3"
   }
 }
