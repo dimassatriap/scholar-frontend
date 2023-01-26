@@ -31,7 +31,7 @@
             placeholder="Masukan Nama lengkap"
             label="Nama Lengkap"
             class="mb-4"
-            :rules="$helpers.formRules('required-name')"
+            :rules="$helpers.formRules('required')"
           />
 
           <YInput

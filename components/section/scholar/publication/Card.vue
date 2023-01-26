@@ -16,6 +16,9 @@
       <div class="text-body2 sblack60--text mt-2">
         <i>{{ value.journal }}</i>
       </div>
+      <div class="text-body2 sblack60--text mt-2">
+        <i>{{ value.conference }}</i>
+      </div>
     </v-card-text>
     <v-divider v-if="showDivider"></v-divider>
     <v-card-actions v-if="!hideActions" class="pt-4 px-sm-6 justify-space-between align-center">

@@ -52,12 +52,15 @@
               </v-col>
 
               <v-col cols="12">
+                <YInput id="input-journal" v-model="form.journal" placeholder="Masukan Nama Jurnal" label="Jurnal" />
+              </v-col>
+
+              <v-col cols="12">
                 <YInput
-                  id="input-journal"
-                  v-model="form.journal"
-                  placeholder="Masukan Nama Jurnal"
-                  label="Jurnal"
-                  :rules="$helpers.formRules('required')"
+                  id="conference"
+                  v-model="form.conference"
+                  placeholder="Masukan Nama Konferensi"
+                  label="Nama Konferensi"
                 />
               </v-col>
 
@@ -117,6 +120,7 @@ export default {
       language: null,
       totalPages: null,
       journal: null,
+      conference: null,
       scholarId: null
     }
 
@@ -157,7 +161,8 @@ export default {
         abstract: null,
         language: null,
         totalPages: null,
-        journal: null
+        journal: null,
+        conference: null
       }
 
       this.$refs.form.resetValidation()
@@ -170,6 +175,7 @@ export default {
       this.form.language = publication.language
       this.form.totalPages = publication.totalPages
       this.form.journal = publication.journal
+      this.form.conference = publication.conference
     },
 
     async submit() {

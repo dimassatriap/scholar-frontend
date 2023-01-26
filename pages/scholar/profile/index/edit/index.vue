@@ -70,7 +70,7 @@
             placeholder="Masukan Nama lengkap"
             label="Nama Lengkap"
             class="mb-4"
-            :rules="$helpers.formRules('required-name')"
+            :rules="$helpers.formRules('required')"
           />
 
           <v-menu
@@ -98,7 +98,6 @@
                   hide-details="auto"
                   class="mb-4"
                   append-icon="$CalendarBoldIcon"
-                  :rules="$helpers.formRules('required')"
                   v-on="on"
                 ></v-text-field>
               </div>

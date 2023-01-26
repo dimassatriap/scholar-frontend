@@ -56,6 +56,16 @@
         <div>{{ publication.journal }}</div>
       </v-col>
     </v-row>
+
+    <v-row v-if="publication.conference" no-gutters class="mt-2 font-weight-light">
+      <v-col cols="12" sm="3" class="pr-3">
+        <div>Konferensi</div>
+      </v-col>
+
+      <v-col cols="12" sm="9">
+        <div>{{ publication.conference }}</div>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

@@ -46,7 +46,7 @@
                           v-model="editedItem.name"
                           placeholder="Masukan Nama lengkap"
                           label="Nama Lengkap"
-                          :rules="$helpers.formRules('required-name')"
+                          :rules="$helpers.formRules('required')"
                         />
                       </v-col>
                       <v-col cols="12" sm="6">
