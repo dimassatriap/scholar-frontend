@@ -6,7 +6,11 @@
       :search="search"
       :loading="loading"
       loading-text="Mohon tunggu..."
+      :options="options"
+      :server-items-length="totalPublications"
       class="elevation-1"
+      @update:page="(page) => fetchPublications({ ...options, search, page })"
+      @update:items-per-page="(itemsPerPage) => fetchPublications({ ...options, search, itemsPerPage })"
     >
       <template v-slot:top>
         <v-toolbar flat>
@@ -286,6 +290,11 @@ export default {
         { text: 'Actions', value: 'actions', sortable: false }
       ],
       publications: [],
+      totalPublications: 0,
+      options: {
+        page: 1,
+        itemsPerPage: 10
+      },
       editedIndex: -1,
       editedItem: {
         id: null,
@@ -348,11 +357,18 @@ export default {
 
     'metadataForm.menuCreatedDate'(val) {
       val && setTimeout(() => (this.activePicker = 'YEAR'))
+    },
+
+    search(newVal) {
+      clearTimeout(this._searchTimerId)
+      this._searchTimerId = setTimeout(() => {
+        this.fetchPublications({ ...this.options, search: newVal, page: 1 })
+      }, 1000)
     }
   },
 
   created() {
-    this.initialize()
+    this.fetchPublications({ ...this.options, search: this.search })
     this.fetchScholars()
   },
 
@@ -367,13 +383,18 @@ export default {
       } catch (e) {}
     },
 
-    async initialize() {
+    async fetchPublications(options) {
       try {
         this.loading = true
-        const a = await this.$repo.publication.getPublications()
+        const a = await this.$repo.publication.getPublications(options)
         const res = a.data
         if (res && res.status) {
           this.publications = res.results
+          this.totalPublications = res.count
+          this.options = {
+            page: res.page,
+            itemsPerPage: res.itemsPerPage
+          }
           return res
         } else {
           this.errorMessage = this.$helpers.keysToCamel(res.messages)
@@ -453,7 +474,7 @@ export default {
           if (res && res.status) {
             this.$YAlert.show({ content: res.messages, timeout: '2000' })
             this.$refs.form.resetValidation()
-            this.initialize()
+            this.fetchPublications({ ...this.options, search: this.search })
             this.close()
             return res
           } else {
@@ -476,7 +497,7 @@ export default {
         const res = a.data
         if (res && res.status) {
           this.$YAlert.show({ content: res.messages, timeout: '2000' })
-          this.initialize()
+          this.fetchPublications({ ...this.options, search: this.search })
           this.closeDelete()
           return res
         } else {
