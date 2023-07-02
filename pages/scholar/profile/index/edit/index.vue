@@ -321,7 +321,7 @@ export default {
 
     async fetchDepartments() {
       try {
-        const a = await this.$repo.universities.getAllDepartments()
+        const a = await this.$repo.university.getDepartments()
         const res = a.data
         if (res && res.status) {
           this.departments = res.results

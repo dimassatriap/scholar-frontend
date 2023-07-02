@@ -60,6 +60,11 @@ export default {
           icon: 'mdi-clipboard-edit',
           title: 'Research',
           to: '/admin/research'
+        },
+        {
+          icon: 'mdi-town-hall',
+          title: 'University',
+          to: '/admin/university'
         }
       ],
 
