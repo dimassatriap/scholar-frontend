@@ -18,12 +18,13 @@
         <v-card elevation="0" outlined @click="$router.push(`/profiles/${scholar.id}`)">
           <v-list-item three-line>
             <v-list-item-content>
-              <div class="text-h6">{{ scholar.name }}</div>
-              <v-list-item-title class="subtitle-1">
+              <div class="subtitle-1 font-weight-medium text--primary">{{ scholar.name }}</div>
+              <v-list-item-title class="subtitle-2 font-weight-regular">
                 {{ scholar.email }}
               </v-list-item-title>
-              <v-list-item-subtitle class="subtitle-1">
-                {{ $moment(scholar.createdAt).format('YYYY') + ' - ' + $moment().format('YYYY') }}
+              <v-list-item-subtitle v-if="scholar.departmentId" class="subtitle-2 font-weight-regular">
+                {{ scholar.department.name
+                }}<span v-if="scholar.department.faculty">, {{ scholar.department.faculty.name }} </span>
               </v-list-item-subtitle>
             </v-list-item-content>
 

@@ -28,8 +28,21 @@
             </v-row>
 
             <div class="mt-4 text-body2 rounded-4 border pa-4">
+              <div class="">
+                Departemen:
+                <span v-if="!!scholar.department">
+                  {{ `${scholar.department.name}` }}
+                  <span v-if="!!scholar.department.faculty">
+                    {{ `, ${scholar.department.faculty.name}` }}
+                  </span>
+                </span>
+                <span v-else>-</span>
+              </div>
+            </div>
+
+            <div class="mt-4 text-body2 rounded-4 border pa-4">
               <div class="">Alamat</div>
-              <div class="mt-1">{{ scholar.address }}</div>
+              <div class="mt-1">{{ !!scholar.address ? scholar.address : '-' }}</div>
             </div>
           </div>
         </div>
