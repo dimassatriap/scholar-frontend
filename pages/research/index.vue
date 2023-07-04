@@ -26,8 +26,16 @@
         <v-col v-for="(publication, i) in publications" :key="'publication' + i" cols="12">
           <v-card elevation="0" outlined @click="$router.push(`/research/${publication.id}`)">
             <v-card-title class="headline"> {{ publication.name }} </v-card-title>
-            <v-card-subtitle class="subtitle-1">
-              {{ publication.scholar.name }}
+            <v-card-subtitle class="mt-n3 subtitle-1 text-justify">
+              <div class="d-flex align-center">
+                <YAvatar size="32" :src="publication.scholar.image"> </YAvatar>
+                <div class="ml-2">
+                  {{ publication.scholar.name }}
+                </div>
+              </div>
+              <div v-if="publication.coAuthor" class="mt-1">
+                {{ publication.coAuthor.replaceAll(',,', '; ') }}
+              </div>
             </v-card-subtitle>
             <v-card-text>
               <div class="ellipsis-2-lines">

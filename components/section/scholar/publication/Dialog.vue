@@ -80,6 +80,53 @@
                   hide-details="auto"
                 ></v-textarea>
               </v-col>
+
+              <v-col cols="12">
+                <div class="mb-1 text-truncate">
+                  <label for="input-co-author" class="text-body2 sblack60--text"> Penulis Lainnya </label>
+                </div>
+                <v-autocomplete
+                  id="input-co-author"
+                  v-model="form.coAuthor"
+                  :loading="isSearchingScholarLoading"
+                  :items="scholars"
+                  multiple
+                  hide-selected
+                  color="white"
+                  item-text="name"
+                  item-value="name"
+                  placeholder="Masukan Penulis Lainnya"
+                  no-data-text="Tidak ada penulis lainnya"
+                  chips
+                  filled
+                  outlined
+                  hide-details="auto"
+                >
+                  <template v-slot:selection="data">
+                    <v-chip
+                      v-bind="data.attrs"
+                      :input-value="data.selected"
+                      close
+                      @click="data.select"
+                      @click:close="remove(data.item)"
+                    >
+                      <v-avatar left>
+                        <v-img :src="data.item.image"></v-img>
+                      </v-avatar>
+                      {{ data.item.name }}
+                    </v-chip>
+                  </template>
+
+                  <template v-slot:item="data">
+                    <v-list-item-avatar>
+                      <img :src="data.item.image" />
+                    </v-list-item-avatar>
+                    <v-list-item-content>
+                      <v-list-item-title>{{ data.item.name }}</v-list-item-title>
+                    </v-list-item-content>
+                  </template>
+                </v-autocomplete>
+              </v-col>
             </v-row>
           </v-container>
         </v-form>
@@ -121,14 +168,18 @@ export default {
       totalPages: null,
       journal: null,
       conference: null,
-      scholarId: null
+      scholarId: null,
+      coAuthor: null
     }
 
     return {
       form,
       isValid: false,
       isSubmitLoading: false,
-      errorMessage: {}
+      errorMessage: {},
+      allScholars: [],
+      itemsPerPage: -1,
+      isSearchingScholarLoading: null
     }
   },
 
@@ -140,6 +191,16 @@ export default {
         this.clearForm()
       }
     }
+  },
+
+  computed: {
+    scholars() {
+      return this.allScholars.filter((e) => e.id !== this.scholar.id)
+    }
+  },
+
+  created() {
+    this.fetchScholars()
   },
 
   mounted() {
@@ -162,7 +223,8 @@ export default {
         language: null,
         totalPages: null,
         journal: null,
-        conference: null
+        conference: null,
+        coAuthor: null
       }
 
       this.$refs.form.resetValidation()
@@ -176,6 +238,28 @@ export default {
       this.form.totalPages = publication.totalPages
       this.form.journal = publication.journal
       this.form.conference = publication.conference
+      if (publication.coAuthor) this.form.coAuthor = publication.coAuthor.split(',,')
+    },
+
+    async fetchScholars() {
+      try {
+        this.isSearchingScholarLoading = true
+        const a = await this.$repo.scholar.getScholars({
+          itemsPerPage: this.itemsPerPage
+        })
+        const res = a.data
+        if (res && res.status) {
+          this.allScholars = res.results
+        }
+      } catch (e) {
+      } finally {
+        this.isSearchingScholarLoading = false
+      }
+    },
+
+    remove(item) {
+      const index = this.form.coAuthor.indexOf(item.name)
+      if (index >= 0) this.form.coAuthor.splice(index, 1)
     },
 
     async submit() {
@@ -184,6 +268,8 @@ export default {
         this.errorMessage = {}
         // console.log('this.form: ', this.form)
         try {
+          if (this.form.coAuthor) this.form.coAuthor = this.form.coAuthor.join(',,')
+
           const a = this.isEdit
             ? await this.$repo.scholar.updatePublication(this.form.id, this.form)
             : await this.$repo.scholar.createPublication(this.form)

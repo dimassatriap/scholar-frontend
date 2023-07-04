@@ -17,10 +17,10 @@
     <v-main>
       <template v-if="$route.path != `/`">
         <v-divider></v-divider>
-        <v-container class="pa-0">
+        <v-container class="px-4 py-0 pa-sm-0">
           <v-row no-gutters>
             <v-col cols="12">
-              <div class="d-flex align-center" :style="{ gap: `64px` }">
+              <div class="d-flex align-center" :style="{ gap: isXs ? `32px` : `64px` }">
                 <v-hover v-for="(item, i) in navItems" :key="'items' + i" v-slot="{ hover }">
                   <NuxtLink
                     :to="item.to"
@@ -47,7 +47,7 @@
                   <v-menu v-model="showMenu" absolute offset-y style="max-width: 600px">
                     <template v-slot:activator="{ on, attrs }">
                       <div
-                        class="text--secondary d-flex flex-column align-center text-center ml-n4"
+                        class="text--secondary d-flex flex-column align-center text-center ml-n2"
                         style="gap: 8px"
                         v-bind="attrs"
                         v-on="on"
@@ -64,7 +64,7 @@
                         class="text-decoration-none"
                       >
                         <v-list-item>
-                          <v-list-item-title>{{ item.title }}</v-list-item-title>
+                          <v-list-item-title class="text-16 text-lato">{{ item.title }}</v-list-item-title>
                         </v-list-item>
                       </NuxtLink>
                     </v-list>

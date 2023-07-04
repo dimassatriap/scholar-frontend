@@ -76,7 +76,7 @@
                     <v-list-item-icon>
                       <v-icon v-text="item.icon"></v-icon>
                     </v-list-item-icon>
-                    <v-list-item-title>{{ item.title }}</v-list-item-title>
+                    <v-list-item-title class="text-16 text-lato">{{ item.title }}</v-list-item-title>
                   </v-list-item>
                 </NuxtLink>
               </v-list>

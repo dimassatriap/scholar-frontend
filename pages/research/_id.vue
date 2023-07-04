@@ -12,8 +12,15 @@
 
         <h2 v-if="publication.name" class="font-weight-medium">{{ publication.name }}</h2>
 
-        <div v-if="publication.scholar.name" class="mt-4 text-h6 text--secondary font-weight-regular">
-          {{ publication.scholar.name }}
+        <div class="mt-4 d-flex align-center">
+          <YAvatar size="32" :src="publication.scholar.image"> </YAvatar>
+          <div v-if="publication.scholar.name" class="ml-2 text-h6 text--secondary font-weight-regular">
+            {{ publication.scholar.name }}
+          </div>
+        </div>
+
+        <div v-if="publication.coAuthor" class="mt-2 text-18 text--secondary font-weight-regular">
+          {{ publication.coAuthor.replaceAll(',,', '; ') }}
         </div>
 
         <v-divider class="mt-4 mb-8"></v-divider>
