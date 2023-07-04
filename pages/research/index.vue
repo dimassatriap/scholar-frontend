@@ -1,47 +1,57 @@
 <template>
-  <v-container class="">
-    <v-row justify="center" align="center">
-      <v-col cols="12">
-        <h2 class="font-weight-medium">Temukan Hasil Riset</h2>
+  <div>
+    <div class="header-title">
+      <v-container class="">
+        <v-row justify="center" align="center">
+          <v-col cols="12">
+            <h2 class="font-weight-medium">Temukan Publikasi</h2>
 
-        <v-text-field
-          id="publication-search"
-          v-model="search"
-          placeholder="Cari Publikasi"
-          outlined
-          append-icon="mdi-magnify"
-          class="mt-4"
-        />
-      </v-col>
+            <v-text-field
+              id="publication-search"
+              v-model="search"
+              placeholder="Cari Publikasi"
+              filled
+              outlined
+              append-icon="mdi-magnify"
+              background-color="white"
+              class="mt-8"
+            />
+          </v-col>
+        </v-row>
+      </v-container>
+    </div>
 
-      <v-col v-for="(publication, i) in publications" :key="'publication' + i" cols="12">
-        <v-card elevation="0" outlined @click="$router.push(`/research/${publication.id}`)">
-          <v-card-title class="headline"> {{ publication.name }} </v-card-title>
-          <v-card-subtitle class="subtitle-1">
-            {{ publication.scholar.name }}
-          </v-card-subtitle>
-          <v-card-text>
-            <div class="ellipsis-2-lines">
-              {{ publication.abstract }}
-            </div>
-          </v-card-text>
-        </v-card>
-      </v-col>
+    <v-container class="">
+      <v-row justify="center" align="center">
+        <v-col v-for="(publication, i) in publications" :key="'publication' + i" cols="12">
+          <v-card elevation="0" outlined @click="$router.push(`/research/${publication.id}`)">
+            <v-card-title class="headline"> {{ publication.name }} </v-card-title>
+            <v-card-subtitle class="subtitle-1">
+              {{ publication.scholar.name }}
+            </v-card-subtitle>
+            <v-card-text>
+              <div class="ellipsis-2-lines">
+                {{ publication.abstract }}
+              </div>
+            </v-card-text>
+          </v-card>
+        </v-col>
 
-      <v-col cols="12">
-        <v-pagination
-          v-model="page"
-          :length="totalPage"
-          @input="
-            (number) => {
-              page = number
-              fetchPublications()
-            }
-          "
-        ></v-pagination>
-      </v-col>
-    </v-row>
-  </v-container>
+        <v-col cols="12">
+          <v-pagination
+            v-model="page"
+            :length="totalPage"
+            @input="
+              (number) => {
+                page = number
+                fetchPublications()
+              }
+            "
+          ></v-pagination>
+        </v-col>
+      </v-row>
+    </v-container>
+  </div>
 </template>
 
 <script>
@@ -104,3 +114,5 @@ export default {
   }
 }
 </script>
+
+<style></style>
