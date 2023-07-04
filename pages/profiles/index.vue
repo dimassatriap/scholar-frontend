@@ -32,6 +32,19 @@
           </v-list-item>
         </v-card>
       </v-col>
+
+      <v-col cols="12">
+        <v-pagination
+          v-model="page"
+          :length="totalPage"
+          @input="
+            (number) => {
+              page = number
+              fetchScholars()
+            }
+          "
+        ></v-pagination>
+      </v-col>
     </v-row>
   </v-container>
 </template>
@@ -41,15 +54,18 @@ export default {
   data() {
     return {
       scholars: [],
-      search: null
+      search: null,
+      page: 1,
+      totalPage: 1
     }
   },
 
   watch: {
-    search(newVal) {
+    search() {
       clearTimeout(this._searchTimerId)
       this._searchTimerId = setTimeout(() => {
-        this.fetchScholars(newVal)
+        this.page = 1
+        this.fetchScholars()
       }, 1000)
     }
   },
@@ -59,14 +75,18 @@ export default {
   },
 
   methods: {
-    async fetchScholars(search = null) {
+    async fetchScholars() {
       try {
         this.loading = true
-        const a = await this.$repo.scholar.getScholars({ search })
+        const a = await this.$repo.scholar.getScholars({
+          search: this.search,
+          page: this.page
+        })
         const res = a.data
         if (res && res.status) {
           this.scholars = res.results
-          return res
+          this.page = res.page
+          this.totalPage = res.totalPage
         } else {
           // this.errorMessage = this.$helpers.keysToCamel(res.messages)
         }
