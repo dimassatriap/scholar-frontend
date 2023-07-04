@@ -1,8 +1,8 @@
 <template>
-  <v-container class="">
-    <v-row :no-gutters="isXs" justify="center" align="center">
-      <v-col cols="12" sm="10">
-        <div class="my-sm-6">
+  <v-container class="my-sm-6">
+    <v-row no-gutters justify="center" align="center">
+      <v-col cols="12" sm="10" class="border rounded-lg">
+        <div class="">
           <div
             class="primary py-6 px-4 px-sm-6 rounded-sm-t-8 d-flex flex-column align-center justify-center white--text"
             style="height: 112px"
