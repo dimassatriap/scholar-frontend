@@ -27,7 +27,7 @@
           <v-card elevation="0" outlined @click="$router.push(`/research/${publication.id}`)">
             <v-card-title class="headline"> {{ publication.name }} </v-card-title>
             <v-card-subtitle class="mt-n3 subtitle-1 text-justify">
-              <div class="d-flex align-center">
+              <div v-if="publication.scholar" class="d-flex align-center">
                 <YAvatar size="32" :src="publication.scholar.image"> </YAvatar>
                 <div class="ml-2">
                   {{ publication.scholar.name }}
@@ -40,6 +40,16 @@
             <v-card-text>
               <div class="ellipsis-2-lines">
                 {{ publication.abstract }}
+              </div>
+
+              <div class="mt-2 d-flex align-center" style="gap: 8px">
+                <button
+                  v-for="(keyword, j) in publication.keywords"
+                  :key="'keyword-' + i + '-' + j"
+                  class="border pa-1 rounded-4"
+                >
+                  {{ keyword.name }}
+                </button>
               </div>
             </v-card-text>
           </v-card>

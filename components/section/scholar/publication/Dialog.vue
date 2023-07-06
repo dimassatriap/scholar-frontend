@@ -92,7 +92,6 @@
                   :items="scholars"
                   multiple
                   hide-selected
-                  color="white"
                   item-text="name"
                   item-value="name"
                   placeholder="Masukan Penulis Lainnya"
@@ -126,6 +125,40 @@
                     </v-list-item-content>
                   </template>
                 </v-autocomplete>
+              </v-col>
+
+              <v-col cols="12">
+                <div class="mb-1 text-truncate">
+                  <label for="input-keyword" class="text-body2 sblack60--text"> Kata Kunci </label>
+                </div>
+                <v-combobox
+                  id="input-keyword"
+                  v-model="formKeywords"
+                  :items="allKeywords"
+                  :loading="isSearchingKeywordLoading"
+                  :search-input.sync="searchKeyword"
+                  multiple
+                  hide-selected
+                  small-chips
+                  item-text="name"
+                  item-value="id"
+                  placeholder="Masukan Kata Kunci"
+                  no-data-text="Tidak ada kata kunci lainnya"
+                  filled
+                  outlined
+                  hide-details="auto"
+                >
+                  <template v-slot:no-data>
+                    <v-list-item>
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          Tidak ada hasil yang cocok untuk "<strong>{{ searchKeyword }}</strong
+                          >". Tekan <kbd>enter</kbd> untuk membuat yang baru
+                        </v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </template>
+                </v-combobox>
               </v-col>
             </v-row>
           </v-container>
@@ -169,17 +202,22 @@ export default {
       journal: null,
       conference: null,
       scholarId: null,
-      coAuthor: null
+      coAuthor: null,
+      keywords: null
     }
 
     return {
       form,
+      formKeywords: null,
       isValid: false,
       isSubmitLoading: false,
       errorMessage: {},
       allScholars: [],
+      allKeywords: [],
       itemsPerPage: -1,
-      isSearchingScholarLoading: null
+      isSearchingScholarLoading: null,
+      isSearchingKeywordLoading: null,
+      searchKeyword: null
     }
   },
 
@@ -201,6 +239,7 @@ export default {
 
   created() {
     this.fetchScholars()
+    this.fetchKeywords()
   },
 
   mounted() {
@@ -224,8 +263,10 @@ export default {
         totalPages: null,
         journal: null,
         conference: null,
-        coAuthor: null
+        coAuthor: null,
+        keywords: null
       }
+      this.formKeywords = null
 
       this.$refs.form.resetValidation()
     },
@@ -239,6 +280,7 @@ export default {
       this.form.journal = publication.journal
       this.form.conference = publication.conference
       if (publication.coAuthor) this.form.coAuthor = publication.coAuthor.split(',,')
+      if (publication.keywords?.length) this.formKeywords = publication.keywords
     },
 
     async fetchScholars() {
@@ -257,6 +299,22 @@ export default {
       }
     },
 
+    async fetchKeywords() {
+      try {
+        this.isSearchingKeywordLoading = true
+        const a = await this.$repo.publication.getKeywords({
+          itemsPerPage: this.itemsPerPage
+        })
+        const res = a.data
+        if (res && res.status) {
+          this.allKeywords = res.results
+        }
+      } catch (e) {
+      } finally {
+        this.isSearchingKeywordLoading = false
+      }
+    },
+
     remove(item) {
       const index = this.form.coAuthor.indexOf(item.name)
       if (index >= 0) this.form.coAuthor.splice(index, 1)
@@ -269,6 +327,13 @@ export default {
         // console.log('this.form: ', this.form)
         try {
           if (this.form.coAuthor) this.form.coAuthor = this.form.coAuthor.join(',,')
+          if (this.formKeywords != null) {
+            this.form.keywords = this.formKeywords.map((k) => {
+              if (k?.id) return k.id
+              else return k
+            })
+            this.form.keywords = this.form.keywords.join(',')
+          }
 
           const a = this.isEdit
             ? await this.$repo.scholar.updatePublication(this.form.id, this.form)

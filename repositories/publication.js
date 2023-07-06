@@ -19,5 +19,9 @@ export default ($axios) => ({
 
   delete(id, payload) {
     return $axios.delete(endpoint + id, payload)
+  },
+
+  getKeywords(payload) {
+    return $axios.get('keyword', { params: payload })
   }
 })

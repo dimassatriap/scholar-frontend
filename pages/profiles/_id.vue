@@ -60,12 +60,19 @@
       <v-col v-for="(publication, i) in scholar.publications" :key="'publication' + i" cols="12">
         <v-card elevation="0" outlined @click="$router.push(`/research/${publication.id}`)">
           <v-card-title class="headline"> {{ publication.name }} </v-card-title>
-          <!-- <v-card-subtitle class="subtitle-1">
-          {{ publication.scholar.name }}
-        </v-card-subtitle> -->
           <v-card-text>
             <div class="ellipsis-2-lines">
               {{ publication.abstract }}
+            </div>
+
+            <div class="mt-2 d-flex align-center" style="gap: 8px">
+              <button
+                v-for="(keyword, j) in publication.keywords"
+                :key="'keyword-' + i + '-' + j"
+                class="border pa-1 rounded-4"
+              >
+                {{ keyword.name }}
+              </button>
             </div>
           </v-card-text>
         </v-card>
