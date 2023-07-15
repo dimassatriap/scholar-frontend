@@ -26,6 +26,20 @@
         <v-col cols="12" lg="3">
           <div class="text-subtitle1">Filter Publikasi</div>
 
+          <div class="mt-6">
+            <v-select
+              v-model="orderPublishDate"
+              :items="publishDateOrderItems"
+              item-text="label"
+              item-value="value"
+              hide-details
+              filled
+              dense
+              background-color="white"
+              class="px-0"
+            ></v-select>
+          </div>
+
           <div v-if="allKeywords.length" class="mt-6">
             <div class="text-subtitle2">Keywords</div>
 
@@ -74,6 +88,22 @@
               </v-card>
             </v-dialog>
           </div>
+
+          <div v-if="publishYears.length" class="mt-6">
+            <div class="text-subtitle2">Tahun Publikasi</div>
+
+            <div class="mb-2">
+              <v-checkbox
+                v-for="year in publishYears"
+                :key="'year' + year"
+                v-model="selectedPublishYears"
+                :label="year"
+                :value="year"
+                hide-details="auto"
+                dense
+              ></v-checkbox>
+            </div>
+          </div>
         </v-col>
         <v-col cols="12" lg="9">
           <v-row justify="center" align="center">
@@ -83,7 +113,15 @@
 
             <v-col v-for="(publication, i) in publications" :key="'publication' + i" cols="12">
               <v-card elevation="0" outlined @click="$router.push(`/research/${publication.id}`)">
-                <v-card-title class="headline"> {{ publication.name }} </v-card-title>
+                <v-card-title class="headline">
+                  <div>
+                    {{ publication.name }}
+
+                    <span v-if="publication.publishDate">
+                      ({{ $moment(publication.publishDate).format('YYYY') }})
+                    </span>
+                  </div>
+                </v-card-title>
                 <v-card-subtitle class="mt-n3 subtitle-1 text-justify">
                   <div v-if="publication.scholar" class="d-flex align-center">
                     <YAvatar size="32" :src="publication.scholar.image"> </YAvatar>
@@ -143,8 +181,22 @@ export default {
       totalPage: 1,
       selectedKeywords: [],
       allKeywords: [],
-      isSearchingKeywordLoading: false,
-      keywordDialog: false
+      isFetchingKeywordLoading: false,
+      keywordDialog: false,
+      orderPublishDate: 'DESC',
+      publishDateOrderItems: [
+        {
+          label: 'Tahun Publikasi (Menurun)',
+          value: 'DESC'
+        },
+        {
+          label: 'Tahun Publikasi (Meningkat)',
+          value: 'ASC'
+        }
+      ],
+      publishYears: [],
+      isFetchingPublishYearsLoading: false,
+      selectedPublishYears: []
     }
   },
 
@@ -185,12 +237,29 @@ export default {
         this.page = 1
         this.fetchPublications()
       }, 1000)
+    },
+
+    orderPublishDate() {
+      clearTimeout(this._orderTimerId)
+      this._orderTimerId = setTimeout(() => {
+        this.page = 1
+        this.fetchPublications()
+      }, 100)
+    },
+
+    selectedPublishYears() {
+      clearTimeout(this._publishYearTimerId)
+      this._publishYearTimerId = setTimeout(() => {
+        this.page = 1
+        this.fetchPublications()
+      }, 500)
     }
   },
 
   created() {
     this.fetchPublications()
     this.fetchKeywords()
+    this.fetchPublishYears()
   },
 
   mounted() {
@@ -208,7 +277,9 @@ export default {
           withScholars: true,
           search: this.search,
           page: this.page,
-          keywords: this.selectedKeywords.join(',')
+          keywords: this.selectedKeywords.join(','),
+          orderPublishDate: this.orderPublishDate,
+          publishYear: this.selectedPublishYears.join(',')
         })
         const res = a.data
         if (res && res.status) {
@@ -229,7 +300,7 @@ export default {
 
     async fetchKeywords() {
       try {
-        this.isSearchingKeywordLoading = true
+        this.isFetchingKeywordLoading = true
         const a = await this.$repo.publication.getKeywords({
           itemsPerPage: -1
         })
@@ -239,19 +310,40 @@ export default {
         }
       } catch (e) {
       } finally {
-        this.isSearchingKeywordLoading = false
+        this.isFetchingKeywordLoading = false
+      }
+    },
+
+    async fetchPublishYears() {
+      try {
+        this.isFetchingPublishYearsLoading = true
+        const a = await this.$repo.publication.getPublishYears()
+        const res = a.data
+        if (res && res.status) {
+          this.publishYears = res.results
+        }
+      } catch (e) {
+      } finally {
+        this.isFetchingPublishYearsLoading = false
       }
     }
   }
 }
 </script>
 
-<style lang="stylus" scoped>
+<style scoped>
 ::v-deep {
   .v-label {
     font-size: 14px;
     font-family: 'Lato', sans-serif;
     font-weight: 400;
+  }
+}
+
+::v-deep {
+  .px-0.v-text-field.v-text-field--enclosed:not(.v-text-field--rounded) > .v-input__control > .v-input__slot,
+  .v-text-field.v-text-field--enclosed .v-text-field__details {
+    padding: 0;
   }
 }
 </style>

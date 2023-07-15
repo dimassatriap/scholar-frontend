@@ -37,6 +37,45 @@
                 />
               </v-col>
 
+              <v-col cols="12">
+                <v-menu
+                  ref="menuPublishDate"
+                  v-model="metadataForm.menuPublishDate"
+                  :close-on-content-click="false"
+                  transition="scale-transition"
+                  offset-y
+                  min-width="auto"
+                >
+                  <template v-slot:activator="{ on, attrs }">
+                    <div>
+                      <div class="mb-1">
+                        <label for="publish-date" class="text-body2 sblack60--text"> Tanggal Publikasi </label>
+                      </div>
+                      <v-text-field
+                        id="publish-date"
+                        v-model="formDateFormatted"
+                        placeholder="Tanggal Publikasi"
+                        filled
+                        outlined
+                        readonly
+                        v-bind="attrs"
+                        hide-details="auto"
+                        append-icon="$CalendarBoldIcon"
+                        :rules="$helpers.formRules('required')"
+                        v-on="on"
+                      ></v-text-field>
+                    </div>
+                  </template>
+                  <v-date-picker
+                    v-model="form.publishDate"
+                    :active-picker.sync="activePicker"
+                    :max="new Date().toISOString().substr(0, 10)"
+                    min="1950-01-01"
+                    @change="savePublishDate"
+                  ></v-date-picker>
+                </v-menu>
+              </v-col>
+
               <v-col cols="12" sm="6">
                 <YInput id="publication-language" v-model="form.language" placeholder="Masukan Bahasa" label="Bahasa" />
               </v-col>
@@ -203,11 +242,16 @@ export default {
       conference: null,
       scholarId: null,
       coAuthor: null,
-      keywords: null
+      keywords: null,
+      publishDate: null
     }
 
     return {
       form,
+      metadataForm: {
+        menuPublishDate: false
+      },
+      activePicker: null,
       formKeywords: null,
       isValid: false,
       isSubmitLoading: false,
@@ -224,6 +268,9 @@ export default {
   computed: {
     scholars() {
       return this.allScholars.filter((e) => e.id !== this.scholar.id)
+    },
+    formDateFormatted() {
+      return this.form.publishDate ? this.$moment(this.form.publishDate).format('DD MMMM YYYY') : ''
     }
   },
 
@@ -234,6 +281,10 @@ export default {
       } else {
         this.clearForm()
       }
+    },
+
+    'metadataForm.menuPublishDate'(val) {
+      val && setTimeout(() => (this.activePicker = 'YEAR'))
     }
   },
 
@@ -264,7 +315,8 @@ export default {
         journal: null,
         conference: null,
         coAuthor: null,
-        keywords: null
+        keywords: null,
+        publishDate: null
       }
       this.formKeywords = null
 
@@ -281,6 +333,13 @@ export default {
       this.form.conference = publication.conference
       if (publication.coAuthor) this.form.coAuthor = publication.coAuthor.split(',,')
       if (publication.keywords?.length) this.formKeywords = publication.keywords
+      if (publication.publishDate) {
+        this.form.publishDate = this.$moment(publication.publishDate).format('YYYY-MM-DD')
+      }
+    },
+
+    savePublishDate(date) {
+      this.$refs.menuPublishDate.save(date)
     },
 
     async fetchScholars() {

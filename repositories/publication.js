@@ -23,5 +23,9 @@ export default ($axios) => ({
 
   getKeywords(payload) {
     return $axios.get('keyword', { params: payload })
+  },
+
+  getPublishYears(payload) {
+    return $axios.get('publication/publish-year', { params: payload })
   }
 })
