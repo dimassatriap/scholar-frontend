@@ -79,8 +79,64 @@
       <nuxt />
     </v-main>
 
-    <v-footer :absolute="true" app>
-      <span>&copy; {{ new Date().getFullYear() }}</span>
+    <v-footer :absolute="true" app class="justify-space-between">
+      <div>Copyright &copy;{{ new Date().getFullYear() }} Scholar Unpad. All Rights Reserved.</div>
+
+      <div class="">
+        <v-dialog v-model="helpDialog" width="800">
+          <template v-slot:activator="{ on, attrs }">
+            <v-btn text class="pa-0 text-subtitle1" color="black" dark v-bind="attrs" v-on="on"> Bantuan </v-btn>
+          </template>
+
+          <v-card>
+            <v-card-title class="text-h5 grey lighten-2"> Laman Bantuan </v-card-title>
+
+            <v-card-text>
+              <div class="mb-4">
+                Anda dapat mengirim pesan jika menemukan kendala dalam aplikasi ini. Sertakan alamat email anda agar
+                kami dapat menghubungi anda lebih lanjut. Terima kasih.
+              </div>
+
+              <MessageInfo
+                :messages.sync="errorMessage"
+                class="mb-4"
+                card-class="sred20"
+                text-class="sblack--text"
+                icon-color="sred60"
+              />
+
+              <v-form ref="form" v-model="form.isValid" lazy-validation @submit.prevent="submit">
+                <YInput
+                  id="input-email"
+                  v-model="form.email"
+                  placeholder="Masukan Email"
+                  label="Email"
+                  class="mb-4"
+                  :rules="$helpers.formRules('optional-email')"
+                />
+
+                <div class="mb-1 text-truncate">
+                  <label for="input-messages" class="text-body2 sblack60--text"> Pesan </label>
+                </div>
+                <v-textarea
+                  id="input-messages"
+                  v-model="form.messages"
+                  placeholder="Masukan Pesan"
+                  :rows="3"
+                  filled
+                  outlined
+                  :rules="$helpers.formRules('required')"
+                  hide-details="auto"
+                ></v-textarea>
+
+                <div class="d-flex justify-end">
+                  <YBtn class="mt-4" :loading="loading" :disabled="!form.isValid" type="submit">Kirim</YBtn>
+                </div>
+              </v-form>
+            </v-card-text>
+          </v-card>
+        </v-dialog>
+      </div>
     </v-footer>
 
     <YAlert />
@@ -146,7 +202,15 @@ export default {
         }
       ],
 
-      miniVariant: false
+      miniVariant: false,
+      helpDialog: false,
+      form: {
+        isValid: false,
+        email: null,
+        messages: null
+      },
+      loading: false,
+      errorMessage: {}
     }
   },
 
@@ -162,7 +226,36 @@ export default {
     }
   },
 
-  mounted() {}
+  mounted() {},
+
+  methods: {
+    async submit() {
+      if (this.$refs.form.validate()) {
+        this.errorMessage = {}
+        this.loading = true
+        try {
+          const a = await this.$repo.auth.postHelpdesk(this.form)
+          const res = a.data
+          if (res && res.status) {
+            this.$YAlert.show({ content: 'Pesan anda berhasil terkirim. Terima kasih.', timeout: '3000' })
+            this.helpDialog = false
+            this.form = {
+              isValid: false,
+              email: null,
+              messages: null
+            }
+          } else {
+            this.errorMessage = this.$helpers.keysToCamel(res.messages)
+          }
+        } catch (e) {
+          const res = e.response.data
+          this.errorMessage = this.$helpers.keysToCamel(res.messages)
+        } finally {
+          this.loading = false
+        }
+      }
+    }
+  }
 }
 </script>
 

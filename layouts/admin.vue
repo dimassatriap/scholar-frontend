@@ -65,6 +65,11 @@ export default {
           icon: 'mdi-town-hall',
           title: 'Universitas',
           to: '/admin/university'
+        },
+        {
+          icon: 'mdi-help-network',
+          title: 'Pesan Kendala',
+          to: '/admin/helpdesk'
         }
       ],
 
