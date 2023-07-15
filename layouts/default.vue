@@ -96,6 +96,7 @@ export default {
   mixins: [allLayoutMixins, breakpointMixin, accountScholarMixins],
   data() {
     return {
+      showMenu: false,
       items: [
         {
           icon: 'mdi-apps',

@@ -215,9 +215,15 @@ export default {
       allScholars: [],
       allKeywords: [],
       itemsPerPage: -1,
-      isSearchingScholarLoading: null,
-      isSearchingKeywordLoading: null,
+      isSearchingScholarLoading: false,
+      isSearchingKeywordLoading: false,
       searchKeyword: null
+    }
+  },
+
+  computed: {
+    scholars() {
+      return this.allScholars.filter((e) => e.id !== this.scholar.id)
     }
   },
 
@@ -228,12 +234,6 @@ export default {
       } else {
         this.clearForm()
       }
-    }
-  },
-
-  computed: {
-    scholars() {
-      return this.allScholars.filter((e) => e.id !== this.scholar.id)
     }
   },
 
