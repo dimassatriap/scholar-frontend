@@ -26,7 +26,7 @@
         </div>
 
         <div v-if="scholar.phone" class="subtitle-1 text--secondary">
-          {{ 0 + $helpers.remove62FromMsisdn(scholar.phone) }}
+          {{ $helpers.formatPhone(scholar.phone) }}
         </div>
       </v-col>
     </v-row>
