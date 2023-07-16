@@ -135,15 +135,15 @@ export default ({ app }, inject) => {
       case 'phone':
         return [
           (v) => !!v || 'No. Hp harus diisi',
-          (v) => /^[8][0-9]{8,12}$/.test(v) || `${v} tidak sesuai dengan format '8xxxxxxxxx' (9-13 digit angka)`
+          (v) => /^[0-9]{8,12}$/.test(v) || `${v} tidak sesuai dengan format (8-12 digit angka)`
         ]
       case 'optional-phone':
         return [
           (v) =>
             v === null ||
             v === '' ||
-            /^[8][0-9]{8,12}$/.test(v) ||
-            `${v} tidak sesuai dengan format '8xxxxxxxxx' (9-13 digit angka)`
+            /^[0-9]{8,12}$/.test(v) ||
+            `${v} tidak sesuai dengan format (8-12 digit angka)`
         ]
       default:
         return []

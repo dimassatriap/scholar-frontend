@@ -98,7 +98,6 @@
                                 v-bind="attrs"
                                 hide-details="auto"
                                 append-icon="$CalendarBoldIcon"
-                                :rules="$helpers.formRules('required')"
                                 v-on="on"
                               ></v-text-field>
                             </div>
