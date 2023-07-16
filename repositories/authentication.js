@@ -11,5 +11,13 @@ export default ($axios) => ({
 
   register(payload) {
     return $axios.post(endpoint + 'register', payload)
+  },
+
+  getHelpdesk(payload) {
+    return $axios.get('helpdesk', payload)
+  },
+
+  postHelpdesk(payload) {
+    return $axios.post('helpdesk', payload)
   }
 })

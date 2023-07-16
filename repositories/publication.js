@@ -19,5 +19,13 @@ export default ($axios) => ({
 
   delete(id, payload) {
     return $axios.delete(endpoint + id, payload)
+  },
+
+  getKeywords(payload) {
+    return $axios.get('keyword', { params: payload })
+  },
+
+  getPublishYears(payload) {
+    return $axios.get('publication/publish-year', { params: payload })
   }
 })

@@ -6,7 +6,11 @@
       :search="search"
       :loading="loading"
       loading-text="Mohon tunggu..."
+      :options="options"
+      :server-items-length="totalPublications"
       class="elevation-1"
+      @update:page="(page) => fetchPublications({ ...options, search, page })"
+      @update:items-per-page="(itemsPerPage) => fetchPublications({ ...options, search, itemsPerPage })"
     >
       <template v-slot:top>
         <v-toolbar flat>
@@ -64,6 +68,45 @@
                           outlined
                           hide-details="auto"
                         ></v-textarea>
+                      </v-col>
+
+                      <v-col cols="12">
+                        <v-menu
+                          ref="menuPublishDate"
+                          v-model="metadataForm.menuPublishDate"
+                          :close-on-content-click="false"
+                          transition="scale-transition"
+                          offset-y
+                          min-width="auto"
+                        >
+                          <template v-slot:activator="{ on, attrs }">
+                            <div>
+                              <div class="mb-1">
+                                <label for="publish-date" class="text-body2 sblack60--text"> Tanggal Publikasi </label>
+                              </div>
+                              <v-text-field
+                                id="publish-date"
+                                v-model="formPublishDateFormatted"
+                                placeholder="Tanggal Publikasi"
+                                filled
+                                outlined
+                                readonly
+                                v-bind="attrs"
+                                hide-details="auto"
+                                append-icon="$CalendarBoldIcon"
+                                :rules="$helpers.formRules('required')"
+                                v-on="on"
+                              ></v-text-field>
+                            </div>
+                          </template>
+                          <v-date-picker
+                            v-model="editedItem.publishDate"
+                            :active-picker.sync="activePicker"
+                            :max="new Date().toISOString().substr(0, 10)"
+                            min="1950-01-01"
+                            @change="savePublishDate"
+                          ></v-date-picker>
+                        </v-menu>
                       </v-col>
 
                       <v-col cols="12" sm="6">
@@ -234,6 +277,10 @@
         <div class="ellipsis-6-lines">{{ item.abstract }}</div>
       </template>
 
+      <template v-slot:[`item.publishDate`]="{ item }">
+        {{ item.publishDate ? $moment(item.publishDate).format('YYYY MMM DD') : '-' }}
+      </template>
+
       <template v-slot:[`item.createdAt`]="{ item }">
         {{ $moment(item.createdAt).format('DD MMM YYYY HH:mm') }}
       </template>
@@ -272,6 +319,7 @@ export default {
         },
         { text: 'Nama', value: 'name' },
         { text: 'Abstrak', value: 'abstract' },
+        { text: 'Tanggal', value: 'publishDate' },
         { text: 'Bahasa', value: 'language' },
         { text: 'Total Halaman', value: 'totalPages' },
         { text: 'ISBN', value: 'ISBN' },
@@ -286,11 +334,17 @@ export default {
         { text: 'Actions', value: 'actions', sortable: false }
       ],
       publications: [],
+      totalPublications: 0,
+      options: {
+        page: 1,
+        itemsPerPage: 10
+      },
       editedIndex: -1,
       editedItem: {
         id: null,
         name: '',
         abstract: null,
+        publishDate: null,
         language: null,
         totalPages: null,
         ISBN: null,
@@ -306,6 +360,7 @@ export default {
         id: null,
         name: '',
         abstract: null,
+        publishDate: null,
         language: null,
         totalPages: null,
         ISBN: null,
@@ -318,6 +373,7 @@ export default {
         updatedAt: null
       },
       metadataForm: {
+        menuPublishDate: false,
         menuCreatedDate: false
       },
       activePicker: null,
@@ -334,6 +390,10 @@ export default {
 
     formDateFormatted() {
       return this.editedItem.createdAt ? this.$moment(this.editedItem.createdAt).format('DD MMMM YYYY') : ''
+    },
+
+    formPublishDateFormatted() {
+      return this.editedItem.publishDate ? this.$moment(this.editedItem.publishDate).format('DD MMMM YYYY') : ''
     }
   },
 
@@ -348,11 +408,22 @@ export default {
 
     'metadataForm.menuCreatedDate'(val) {
       val && setTimeout(() => (this.activePicker = 'YEAR'))
+    },
+
+    'metadataForm.menuPublishDate'(val) {
+      val && setTimeout(() => (this.activePicker = 'YEAR'))
+    },
+
+    search(newVal) {
+      clearTimeout(this._searchTimerId)
+      this._searchTimerId = setTimeout(() => {
+        this.fetchPublications({ ...this.options, search: newVal, page: 1 })
+      }, 1000)
     }
   },
 
   created() {
-    this.initialize()
+    this.fetchPublications({ ...this.options, search: this.search })
     this.fetchScholars()
   },
 
@@ -367,13 +438,18 @@ export default {
       } catch (e) {}
     },
 
-    async initialize() {
+    async fetchPublications(options) {
       try {
         this.loading = true
-        const a = await this.$repo.publication.getPublications()
+        const a = await this.$repo.publication.getPublications(options)
         const res = a.data
         if (res && res.status) {
           this.publications = res.results
+          this.totalPublications = res.count
+          this.options = {
+            page: res.page,
+            itemsPerPage: res.itemsPerPage
+          }
           return res
         } else {
           this.errorMessage = this.$helpers.keysToCamel(res.messages)
@@ -390,12 +466,20 @@ export default {
       this.$refs.menuCreatedDate.save(date)
     },
 
+    savePublishDate(date) {
+      this.$refs.menuPublishDate.save(date)
+    },
+
     editItem(item) {
       this.editedIndex = this.publications.indexOf(item)
 
       this.editedItem = Object.assign({}, item)
       if (this.editedItem.createdAt) {
         this.editedItem.createdAt = this.$moment(this.editedItem.createdAt).format('YYYY-MM-DD')
+      }
+
+      if (this.editedItem.publishDate) {
+        this.editedItem.publishDate = this.$moment(this.editedItem.publishDate).format('YYYY-MM-DD')
       }
 
       this.showDialog()
@@ -441,6 +525,14 @@ export default {
         ...editedItem
       }
 
+      if (form.keywords != null) {
+        form.keywords = form.keywords.map((k) => {
+          if (k?.id) return k.id
+          else return k
+        })
+        form.keywords = form.keywords.join(',')
+      }
+
       if (this.$refs.form.validate()) {
         this.loading = true
         this.errorMessage = {}
@@ -453,7 +545,7 @@ export default {
           if (res && res.status) {
             this.$YAlert.show({ content: res.messages, timeout: '2000' })
             this.$refs.form.resetValidation()
-            this.initialize()
+            this.fetchPublications({ ...this.options, search: this.search })
             this.close()
             return res
           } else {
@@ -476,7 +568,7 @@ export default {
         const res = a.data
         if (res && res.status) {
           this.$YAlert.show({ content: res.messages, timeout: '2000' })
-          this.initialize()
+          this.fetchPublications({ ...this.options, search: this.search })
           this.closeDelete()
           return res
         } else {

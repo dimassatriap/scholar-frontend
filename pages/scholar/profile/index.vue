@@ -1,8 +1,8 @@
 <template>
-  <v-container class="">
-    <v-row :no-gutters="isXs" justify="center" align="center">
-      <v-col cols="12" sm="10">
-        <div class="my-sm-6">
+  <v-container class="my-sm-6">
+    <v-row no-gutters justify="center" align="center">
+      <v-col cols="12" sm="10" class="border rounded-lg">
+        <div class="">
           <div
             class="primary py-6 px-4 px-sm-6 rounded-sm-t-8 d-flex flex-column align-center justify-center white--text"
             style="height: 112px"
@@ -28,8 +28,21 @@
             </v-row>
 
             <div class="mt-4 text-body2 rounded-4 border pa-4">
+              <div class="">
+                Departemen:
+                <span v-if="!!scholar.department">
+                  {{ `${scholar.department.name}` }}
+                  <span v-if="!!scholar.department.faculty">
+                    {{ `, ${scholar.department.faculty.name}` }}
+                  </span>
+                </span>
+                <span v-else>-</span>
+              </div>
+            </div>
+
+            <div class="mt-4 text-body2 rounded-4 border pa-4">
               <div class="">Alamat</div>
-              <div class="mt-1">{{ scholar.address }}</div>
+              <div class="mt-1">{{ !!scholar.address ? scholar.address : '-' }}</div>
             </div>
           </div>
         </div>

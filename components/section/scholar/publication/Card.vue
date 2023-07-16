@@ -12,12 +12,18 @@
     <v-card-text class="text--primary" :class="{ 'px-0': flat, 'pt-sm-6 px-sm-6': !flat, 'py-0': !showDivider }">
       <div class="text-body1 bold">
         {{ value.name }}
+        <span v-if="value.publishDate">({{ $moment(value.publishDate).format('YYYY') }})</span>
       </div>
       <div class="text-body2 sblack60--text mt-2">
         <i>{{ value.journal }}</i>
       </div>
       <div class="text-body2 sblack60--text mt-2">
         <i>{{ value.conference }}</i>
+      </div>
+      <div class="text-body2 sblack60--text mt-2">
+        <span v-for="(keyword, j) in value.keywords" :key="'keyword-' + value.id + '-' + j"
+          ><span v-if="j > 0">, </span>{{ keyword.name }}</span
+        >
       </div>
     </v-card-text>
     <v-divider v-if="showDivider"></v-divider>

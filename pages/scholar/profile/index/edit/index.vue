@@ -124,6 +124,20 @@
           </v-radio-group>
 
           <div class="mb-1 text-truncate">
+            <label for="input-department-id" class="text-body2 sblack60--text"> Departemen </label>
+          </div>
+          <v-autocomplete
+            id="input-department-id"
+            v-model="form.departmentId"
+            placeholder="Masukan Departemen"
+            :items="formattedDepartements"
+            filled
+            outlined
+            hide-details="auto"
+            class="mb-4"
+          ></v-autocomplete>
+
+          <div class="mb-1 text-truncate">
             <label for="input-street-address" class="text-body2 sblack60--text"> Detail Alamat </label>
           </div>
           <v-textarea
@@ -168,7 +182,8 @@ export default {
         photo: null,
         name: null,
         birthDate: null,
-        gender: null
+        gender: null,
+        departmentId: null
       },
       metadataForm: {
         menuBirthDate: false,
@@ -180,13 +195,23 @@ export default {
       ],
       activePicker: null,
       isSubmitLoading: false,
-      errorMessage: {}
+      errorMessage: {},
+      departments: []
     }
   },
 
   computed: {
     formDateFormatted() {
       return this.form.birthDate ? this.$moment(this.form.birthDate).format('DD MMMM YYYY') : ''
+    },
+
+    formattedDepartements() {
+      return this.departments?.map((d) => {
+        return {
+          value: d.id,
+          text: `${d.name}, ${d.faculty?.name}`
+        }
+      })
     }
   },
 
@@ -206,6 +231,10 @@ export default {
         this.uploadImage(val)
       }
     }
+  },
+
+  created() {
+    this.fetchDepartments()
   },
 
   mounted() {
@@ -252,6 +281,7 @@ export default {
       }
       this.form.gender = this.scholar.gender
       this.form.address = this.scholar.address
+      this.form.departmentId = this.scholar.departmentId
     },
 
     previewFile(src) {
@@ -286,6 +316,18 @@ export default {
         } finally {
           this.isSubmitLoading = false
         }
+      }
+    },
+
+    async fetchDepartments() {
+      try {
+        const a = await this.$repo.university.getDepartments()
+        const res = a.data
+        if (res && res.status) {
+          this.departments = res.results
+        }
+      } catch (e) {
+      } finally {
       }
     }
   }

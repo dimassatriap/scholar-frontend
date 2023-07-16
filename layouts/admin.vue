@@ -15,9 +15,9 @@
       </v-list>
     </v-navigation-drawer>
 
-    <v-app-bar :clipped-left="clipped" fixed app>
+    <v-app-bar height="130" max-height="130" :clipped-left="clipped" fixed app elevation="0">
       <v-app-bar-nav-icon @click.stop="drawer = !drawer" />
-      <v-toolbar-title v-text="$helpers.getBusinessInfo().title" />
+      <YImg contain :src="require('~/assets/logos/logo-unpad.svg')" max-width="320" class="ml-8" position="left"></YImg>
       <v-spacer />
     </v-app-bar>
 
@@ -48,18 +48,28 @@ export default {
       navItems: [
         {
           icon: 'mdi-account',
-          title: 'Account',
+          title: 'Akun',
           to: '/admin/akun'
         },
         {
           icon: 'mdi-account-tie',
-          title: 'Scholars',
+          title: 'Dosen',
           to: '/admin/scholars'
         },
         {
           icon: 'mdi-clipboard-edit',
-          title: 'Research',
+          title: 'Publikasi',
           to: '/admin/research'
+        },
+        {
+          icon: 'mdi-town-hall',
+          title: 'Universitas',
+          to: '/admin/university'
+        },
+        {
+          icon: 'mdi-help-network',
+          title: 'Pesan Kendala',
+          to: '/admin/helpdesk'
         }
       ],
 
