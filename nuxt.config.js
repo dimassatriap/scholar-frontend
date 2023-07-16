@@ -11,6 +11,10 @@ export default {
     link: [{ rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' }]
   },
 
+  env: {
+    ADMIN_PASSWORD: process.env.ADMIN_PASSWORD
+  },
+
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [],
 
