@@ -79,6 +79,8 @@
       <nuxt />
     </v-main>
 
+    <div class="mt-16"></div>
+
     <v-footer :absolute="true" app class="justify-space-between">
       <div>Copyright &copy;{{ new Date().getFullYear() }} Scholar Unpad. All Rights Reserved.</div>
 
