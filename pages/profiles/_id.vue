@@ -65,11 +65,11 @@
               {{ publication.abstract }}
             </div>
 
-            <div class="mt-2 d-flex align-center" style="gap: 8px">
+            <div class="mt-2 d-flex align-center flex-wrap" style="gap: 8px">
               <button
                 v-for="(keyword, j) in publication.keywords"
                 :key="'keyword-' + i + '-' + j"
-                class="border pa-1 rounded-4"
+                class="border pa-1 rounded-4 text-capitalize"
               >
                 {{ keyword.name }}
               </button>
