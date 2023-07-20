@@ -12,7 +12,13 @@
 
         <h2 v-if="publication.name" class="font-weight-medium">{{ publication.name }}</h2>
 
-        <div class="mt-4 d-flex align-center">
+        <div
+          v-if="publication.scholar"
+          v-ripple
+          class="mt-4 d-flex align-center"
+          role="button"
+          @click="$router.push(`/profiles/${publication.scholar.id}`)"
+        >
           <YAvatar size="32" :src="publication.scholar.image"> </YAvatar>
           <div v-if="publication.scholar.name" class="ml-2 text-h6 text--secondary font-weight-regular">
             {{ publication.scholar.name }}
