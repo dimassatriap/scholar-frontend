@@ -97,7 +97,7 @@
                 v-for="year in publishYears"
                 :key="'year' + year"
                 v-model="selectedPublishYears"
-                :label="year"
+                :label="String(year)"
                 :value="year"
                 hide-details="auto"
                 dense
@@ -110,6 +110,12 @@
             <v-col v-if="publications.length < 1 && !loading" cols="12">
               <h3 class="py-16">Publikasi tidak di temukan</h3>
             </v-col>
+
+            <template v-if="loading">
+              <v-col v-for="i in 10" :key="'skeleton' + i" cols="12">
+                <v-skeleton-loader :height="isXs ? '16rem' : '11rem'" width="100%" type="image"></v-skeleton-loader>
+              </v-col>
+            </template>
 
             <v-col v-for="(publication, i) in publications" :key="'publication' + i" cols="12">
               <v-card elevation="0" outlined @click="$router.push(`/research/${publication.id}`)">
@@ -171,7 +177,11 @@
 </template>
 
 <script>
+import breakpointMixin from '~/mixins/breakpoint'
+
 export default {
+  mixins: [breakpointMixin],
+
   data() {
     return {
       loading: false,
@@ -273,6 +283,7 @@ export default {
     async fetchPublications() {
       try {
         this.loading = true
+        this.publications = []
         const a = await this.$repo.publication.getPublications({
           withScholars: true,
           search: this.search,
