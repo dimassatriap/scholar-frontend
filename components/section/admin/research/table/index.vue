@@ -48,8 +48,8 @@
                         <YInput
                           id="name"
                           v-model="editedItem.name"
-                          placeholder="Masukan Nama Publikasi"
-                          label="Nama Publikasi"
+                          placeholder="Masukan Judul Publikasi"
+                          label="Judul Publikasi"
                           :rules="$helpers.formRules('required')"
                         />
                       </v-col>

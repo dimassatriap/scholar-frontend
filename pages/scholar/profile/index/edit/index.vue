@@ -124,12 +124,12 @@
           </v-radio-group>
 
           <div class="mb-1 text-truncate">
-            <label for="input-department-id" class="text-body2 sblack60--text"> Departemen </label>
+            <label for="input-department-id" class="text-body2 sblack60--text"> Program Studi </label>
           </div>
           <v-autocomplete
             id="input-department-id"
             v-model="form.departmentId"
-            placeholder="Masukan Departemen"
+            placeholder="Masukan Program Studi"
             :items="formattedDepartements"
             filled
             outlined

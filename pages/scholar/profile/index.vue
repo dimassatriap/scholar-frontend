@@ -29,7 +29,7 @@
 
             <div class="mt-4 text-body2 rounded-4 border pa-4">
               <div class="">
-                Departemen:
+                Program Studi:
                 <span v-if="!!scholar.department">
                   {{ `${scholar.department.name}` }}
                   <span v-if="!!scholar.department.faculty">

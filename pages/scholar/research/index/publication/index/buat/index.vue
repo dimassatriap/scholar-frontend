@@ -14,8 +14,8 @@
       <YInput
         id="publication-name"
         v-model="form.name"
-        placeholder="Masukan Nama Publikasi"
-        label="Nama Publikasi"
+        placeholder="Masukan Judul Publikasi"
+        label="Judul Publikasi"
         class="mb-4"
         :rules="$helpers.formRules('required')"
       />

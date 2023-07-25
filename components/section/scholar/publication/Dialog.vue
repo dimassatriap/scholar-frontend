@@ -31,8 +31,8 @@
                 <YInput
                   id="publication-name"
                   v-model="form.name"
-                  placeholder="Masukan Nama Publikasi"
-                  label="Nama Publikasi"
+                  placeholder="Masukan Judul Publikasi"
+                  label="Judul Publikasi"
                   :rules="$helpers.formRules('required')"
                 />
               </v-col>
