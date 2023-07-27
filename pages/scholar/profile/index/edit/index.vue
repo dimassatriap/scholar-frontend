@@ -124,6 +124,18 @@
             ></v-radio>
           </v-radio-group>
 
+          <div class="mb-4">
+            <YInput
+              id="phone"
+              v-model="form.phone"
+              placeholder="Masukan No. Handphone"
+              label="No. Handphone"
+              prepend-inner-text="+62"
+              type="number"
+              :rules="$helpers.formRules('phone')"
+            />
+          </div>
+
           <div class="mb-1 text-truncate">
             <label for="input-department-id" class="text-body2 sblack60--text"> Program Studi </label>
           </div>
@@ -184,6 +196,7 @@ export default {
         name: null,
         birthDate: null,
         gender: null,
+        phone: null,
         departmentId: null
       },
       metadataForm: {
@@ -285,6 +298,9 @@ export default {
         this.form.birthDate = this.$moment(this.scholar.birthDate).format('YYYY-MM-DD')
       }
       this.form.gender = this.scholar.gender
+      if (this.scholar.phone) {
+        this.form.phone = this.$helpers.remove62FromMsisdn(this.scholar.phone)
+      }
       this.form.address = this.scholar.address
       this.form.departmentId = this.scholar.departmentId
     },
@@ -306,8 +322,11 @@ export default {
         this.isSubmitLoading = true
         this.errorMessage = {}
 
+        const scholarForm = { ...form }
+        if (form.phone) scholarForm.phone = 62 + form.phone
+
         try {
-          const a = await this.$repo.scholar.updateScholar(id, form)
+          const a = await this.$repo.scholar.updateScholar(id, scholarForm)
           const res = a.data
           if (res && res.status) {
             this.$store.commit('scholar/SET_SCHOLAR', res.results)
