@@ -99,6 +99,7 @@
                   class="mb-4"
                   append-icon="$CalendarBoldIcon"
                   v-on="on"
+                  @click:append="on.click"
                 ></v-text-field>
               </div>
             </template>
@@ -106,7 +107,7 @@
               v-model="form.birthDate"
               :active-picker.sync="activePicker"
               :max="new Date().toISOString().substr(0, 10)"
-              min="1950-01-01"
+              min="1930-01-01"
               @change="saveBirthDate"
             ></v-date-picker>
           </v-menu>
@@ -223,7 +224,11 @@ export default {
     },
 
     'metadataForm.menuBirthDate'(val) {
-      val && setTimeout(() => (this.activePicker = 'YEAR'))
+      val &&
+        setTimeout(() => {
+          if (!this.form.birthDate) this.form.birthDate = '1970-01-01'
+          this.activePicker = 'YEAR'
+        })
     },
 
     'form.photo'(val) {
