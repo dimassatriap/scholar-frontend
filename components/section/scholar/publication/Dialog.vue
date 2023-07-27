@@ -168,7 +168,7 @@
 
               <v-col cols="12">
                 <div class="mb-1 text-truncate">
-                  <label for="input-keyword" class="text-body2 sblack60--text"> Kata Kunci </label>
+                  <label for="input-keyword" class="text-body2 sblack60--text"> Kata Kunci (keyword) </label>
                 </div>
                 <v-combobox
                   id="input-keyword"
@@ -181,7 +181,7 @@
                   small-chips
                   item-text="name"
                   item-value="id"
-                  placeholder="Masukan Kata Kunci"
+                  placeholder="Masukan Kata Kunci (keyword)"
                   no-data-text="Tidak ada kata kunci lainnya"
                   filled
                   outlined
