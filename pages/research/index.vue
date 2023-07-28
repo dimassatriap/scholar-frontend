@@ -9,7 +9,7 @@
             <v-text-field
               id="publication-search"
               v-model="search"
-              placeholder="Cari Publikasi"
+              placeholder="Cari Publikasi berdasarkan Judul, Abstrak, atau Nama Penulis"
               filled
               outlined
               append-icon="mdi-magnify"

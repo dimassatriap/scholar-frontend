@@ -16,14 +16,6 @@
         </YBtn>
       </v-card-title>
       <v-card-text>
-        <MessageInfo
-          :messages.sync="errorMessage"
-          class="mb-4"
-          card-class="sred20"
-          text-class="sblack--text"
-          icon-color="sred60"
-        />
-
         <v-form ref="form" v-model="isValid" lazy-validation>
           <v-container>
             <v-row dense>
@@ -91,7 +83,16 @@
               </v-col>
 
               <v-col cols="12">
-                <YInput id="input-journal" v-model="form.journal" placeholder="Masukan Nama Jurnal" label="Jurnal" />
+                <YInput id="input-issn" v-model="form.ISSN" placeholder="Masukan ISSN" label="ISSN" />
+              </v-col>
+
+              <v-col cols="12">
+                <YInput
+                  id="input-journal"
+                  v-model="form.journal"
+                  placeholder="Masukan Nama Jurnal"
+                  label="Nama Jurnal"
+                />
               </v-col>
 
               <v-col cols="12">
@@ -111,7 +112,6 @@
                   id="input-abstraction"
                   v-model="form.abstract"
                   placeholder="Masukan Abstrak"
-                  :rows="isXs ? 2 : 1"
                   auto-grow
                   filled
                   outlined
@@ -203,7 +203,14 @@
           </v-container>
         </v-form>
       </v-card-text>
-      <v-card-actions>
+      <v-card-actions class="flex-column align-stretch">
+        <MessageInfo
+          :messages.sync="errorMessage"
+          card-class="sred20"
+          text-class="sblack--text"
+          icon-color="sred60"
+          class="mb-4"
+        />
         <YBtn large class="flex-grow-1" :disabled="!isValid" :loading="isSubmitLoading" @click="submit"> Simpan </YBtn>
       </v-card-actions>
     </v-card>
@@ -238,6 +245,7 @@ export default {
       abstract: null,
       language: null,
       totalPages: null,
+      ISSN: null,
       journal: null,
       conference: null,
       scholarId: null,
@@ -276,6 +284,7 @@ export default {
 
   watch: {
     editPublication(editPublication) {
+      this.errorMessage = {}
       if (editPublication && this.$helpers.isObject(editPublication)) {
         this.fillFormWithEditPublication(editPublication)
       } else {
@@ -312,6 +321,7 @@ export default {
         abstract: null,
         language: null,
         totalPages: null,
+        ISSN: null,
         journal: null,
         conference: null,
         coAuthor: null,
@@ -329,6 +339,7 @@ export default {
       this.form.abstract = publication.abstract
       this.form.language = publication.language
       this.form.totalPages = publication.totalPages
+      this.form.ISSN = publication.ISSN
       this.form.journal = publication.journal
       this.form.conference = publication.conference
       if (publication.coAuthor) this.form.coAuthor = publication.coAuthor.split(',,')

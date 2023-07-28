@@ -60,6 +60,16 @@
       </v-col>
     </v-row>
 
+    <v-row v-if="publication.ISSN" no-gutters class="mt-2 font-weight-light">
+      <v-col cols="12" sm="3" class="pr-3">
+        <div>ISSN</div>
+      </v-col>
+
+      <v-col cols="12" sm="9">
+        <div>{{ publication.ISSN }}</div>
+      </v-col>
+    </v-row>
+
     <v-row v-if="publication.journal" no-gutters class="mt-2 font-weight-light">
       <v-col cols="12" sm="3" class="pr-3">
         <div>Jurnal</div>

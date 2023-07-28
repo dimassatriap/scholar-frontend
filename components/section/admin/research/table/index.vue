@@ -139,6 +139,10 @@
                       </v-col>
 
                       <v-col cols="12">
+                        <YInput id="ISSN" v-model="editedItem.ISSN" placeholder="Masukan ISSN" label="ISSN" />
+                      </v-col>
+
+                      <v-col cols="12">
                         <YInput
                           id="journal"
                           v-model="editedItem.journal"
@@ -322,6 +326,7 @@ export default {
         { text: 'Tanggal', value: 'publishDate' },
         { text: 'Bahasa', value: 'language' },
         { text: 'Total Halaman', value: 'totalPages' },
+        { text: 'ISSN', value: 'ISSN' },
         { text: 'ISBN', value: 'ISBN' },
         { text: 'Jurnal', value: 'journal' },
         { text: 'Penerbit', value: 'publisher' },
@@ -347,6 +352,7 @@ export default {
         publishDate: null,
         language: null,
         totalPages: null,
+        ISSN: null,
         ISBN: null,
         journal: null,
         publisher: null,
@@ -363,6 +369,7 @@ export default {
         publishDate: null,
         language: null,
         totalPages: null,
+        ISSN: null,
         ISBN: null,
         journal: null,
         publisher: null,
