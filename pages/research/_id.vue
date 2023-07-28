@@ -89,6 +89,23 @@
         <div>{{ publication.conference }}</div>
       </v-col>
     </v-row>
+
+    <v-row v-if="publication.link" no-gutters class="mt-2 font-weight-light">
+      <v-col cols="12" sm="3" class="pr-3">
+        <div>Pranala</div>
+      </v-col>
+
+      <v-col cols="12" sm="9">
+        <a
+          class="ellipsis-1-lines text-decoration-none"
+          style="word-break: break-all"
+          :href="publication.link"
+          target="_blank"
+        >
+          {{ publication.link }}
+        </a>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

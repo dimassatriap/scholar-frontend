@@ -178,6 +178,15 @@
                         />
                       </v-col>
 
+                      <v-col cols="12">
+                        <YInput
+                          id="link"
+                          v-model="editedItem.link"
+                          placeholder="Masukan Pranala Publikasi"
+                          label="Pranala"
+                        />
+                      </v-col>
+
                       <v-col cols="12" sm="6">
                         <div class="mb-1 text-truncate">
                           <label for="input-scholar-id" class="text-body2 sblack60--text"> Pemilik Publikasi </label>
@@ -333,6 +342,7 @@ export default {
         { text: 'Nomor', value: 'number' },
         { text: 'Acara publikasi', value: 'publicationEvent' },
         { text: 'Konferensi', value: 'conference' },
+        { text: 'Pranala', value: 'link' },
         { text: 'ID Scholar', value: 'scholarId' },
         { text: 'Tanggal Dibuat', value: 'createdAt' },
         { text: 'Tanggal Diubah', value: 'updatedAt' },
@@ -359,6 +369,7 @@ export default {
         number: null,
         publicationEvent: null,
         conference: null,
+        link: null,
         createdAt: null,
         updatedAt: null
       },
@@ -376,6 +387,7 @@ export default {
         number: null,
         publicationEvent: null,
         conference: null,
+        link: null,
         createdAt: null,
         updatedAt: null
       },

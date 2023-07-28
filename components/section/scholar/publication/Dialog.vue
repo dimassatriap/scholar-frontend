@@ -199,6 +199,10 @@
                   </template>
                 </v-combobox>
               </v-col>
+
+              <v-col cols="12">
+                <YInput id="input-link" v-model="form.link" placeholder="Masukan Pranala Publikasi" label="Pranala" />
+              </v-col>
             </v-row>
           </v-container>
         </v-form>
@@ -251,6 +255,7 @@ export default {
       scholarId: null,
       coAuthor: null,
       keywords: null,
+      link: null,
       publishDate: null
     }
 
@@ -326,6 +331,7 @@ export default {
         conference: null,
         coAuthor: null,
         keywords: null,
+        link: null,
         publishDate: null
       }
       this.formKeywords = null
@@ -334,14 +340,9 @@ export default {
     },
 
     fillFormWithEditPublication(publication) {
-      this.form.id = publication.id
-      this.form.name = publication.name
-      this.form.abstract = publication.abstract
-      this.form.language = publication.language
-      this.form.totalPages = publication.totalPages
-      this.form.ISSN = publication.ISSN
-      this.form.journal = publication.journal
-      this.form.conference = publication.conference
+      this.form = {
+        ...publication
+      }
       if (publication.coAuthor) this.form.coAuthor = publication.coAuthor.split(',,')
       if (publication.keywords?.length) this.formKeywords = publication.keywords
       if (publication.publishDate) {

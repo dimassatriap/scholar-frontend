@@ -131,8 +131,9 @@
                   hide-details="auto"
                 ></v-textarea>
 
-                <div class="d-flex justify-end">
-                  <YBtn class="mt-4" :loading="loading" :disabled="!form.isValid" type="submit">Kirim</YBtn>
+                <div class="d-flex justify-end mt-4 gap-4">
+                  <YBtn text class="mr-4" @click="helpDialog = false">Batal</YBtn>
+                  <YBtn :loading="loading" :disabled="!form.isValid" type="submit">Kirim</YBtn>
                 </div>
               </v-form>
             </v-card-text>
@@ -228,9 +229,27 @@ export default {
     }
   },
 
+  watch: {
+    scholar(val) {
+      if (val.email) {
+        this.form.email = val.email
+      } else {
+        this.cleanForm()
+      }
+    }
+  },
+
   mounted() {},
 
   methods: {
+    cleanForm() {
+      this.form = {
+        isValid: false,
+        email: null,
+        messages: null
+      }
+    },
+
     async submit() {
       if (this.$refs.form.validate()) {
         this.errorMessage = {}
@@ -241,11 +260,7 @@ export default {
           if (res && res.status) {
             this.$YAlert.show({ content: 'Pesan anda berhasil terkirim. Terima kasih.', timeout: '3000' })
             this.helpDialog = false
-            this.form = {
-              isValid: false,
-              email: null,
-              messages: null
-            }
+            this.cleanForm()
           } else {
             this.errorMessage = this.$helpers.keysToCamel(res.messages)
           }
