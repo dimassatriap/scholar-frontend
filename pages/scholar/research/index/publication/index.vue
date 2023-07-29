@@ -14,7 +14,7 @@
       </div>
     </template>
 
-    <div v-for="(publication, i) in publications" :key="'publication' + i" class="mb-6">
+    <div v-for="(publication, j) in publications" :key="'publication' + j" class="mb-6">
       <ScholarPublicationCard
         :value="publication"
         @edit="
@@ -42,12 +42,12 @@
         </v-col>
 
         <template v-if="otherPublicationLoading">
-          <v-col v-for="i in 2" :key="'other-skeleton' + i" cols="12">
+          <v-col v-for="k in 2" :key="'other-skeleton' + k" cols="12">
             <v-skeleton-loader :height="isXs ? '16rem' : '11rem'" width="100%" type="image"></v-skeleton-loader>
           </v-col>
         </template>
 
-        <v-col v-for="(publication, i) in otherPublications" :key="'other-publication' + i" cols="12">
+        <v-col v-for="(publication, l) in otherPublications" :key="'other-publication' + l" cols="12">
           <PublicationCard :value="publication" />
         </v-col>
       </v-row>
@@ -93,7 +93,7 @@ export default {
         this.publications = []
         const a = await this.$repo.publication.getPublications({
           withScholars: true,
-          search: this.scholar.name,
+          firstAuthors: this.scholar.id,
           limit: -1
         })
         const res = a.data

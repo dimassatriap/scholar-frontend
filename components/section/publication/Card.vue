@@ -26,7 +26,7 @@
       <div class="mt-2 d-flex align-center flex-wrap" style="gap: 8px">
         <button
           v-for="(keyword, j) in value.keywords"
-          :key="'keyword-' + i + '-' + j"
+          :key="'keyword-' + value.id + '-' + j"
           class="border pa-1 rounded-4 text-capitalize"
         >
           {{ keyword.name }}
