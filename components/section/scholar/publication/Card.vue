@@ -9,21 +9,42 @@
     <template slot="progress">
       <v-progress-linear color="primary" height="10" indeterminate></v-progress-linear>
     </template>
-    <v-card-text class="text--primary" :class="{ 'px-0': flat, 'pt-sm-6 px-sm-6': !flat, 'py-0': !showDivider }">
-      <div class="text-body1 bold">
+    <v-card-text :class="{ 'px-0': flat, 'pt-sm-6 px-sm-6': !flat, 'py-0': !showDivider }">
+      <div class="text-body1 text--primary bold">
         {{ value.name }}
         <span v-if="value.publishDate">({{ $moment(value.publishDate).format('YYYY') }})</span>
       </div>
-      <div class="text-body2 sblack60--text mt-2">
+
+      <div v-if="value.scholar" class="d-flex align-center mt-2 text--primary">
+        <YAvatar size="32" :src="value.scholar.image"> </YAvatar>
+        <div class="ml-2">
+          {{ $helpers.fullName(value.scholar.name, value.scholar.frontTitle, value.scholar.backTitle) }}
+        </div>
+      </div>
+
+      <div v-if="value.coAuthor" class="mt-1 text--primary">
+        {{ value.coAuthor.replaceAll(',,', '; ') }}
+      </div>
+
+      <div class="text-body2 mt-1">
         <i>{{ value.journal }}</i>
       </div>
-      <div class="text-body2 sblack60--text mt-2">
+      <div class="text-body2 mt-1">
         <i>{{ value.conference }}</i>
       </div>
-      <div class="text-body2 sblack60--text mt-2">
-        <span v-for="(keyword, j) in value.keywords" :key="'keyword-' + value.id + '-' + j"
-          ><span v-if="j > 0">, </span>{{ keyword.name }}</span
+
+      <div class="ellipsis-2-lines mt-1">
+        {{ value.abstract }}
+      </div>
+
+      <div class="mt-2 d-flex align-center flex-wrap" style="gap: 8px">
+        <button
+          v-for="(keyword, j) in value.keywords"
+          :key="'keyword-' + value.id + '-' + j"
+          class="border pa-1 rounded-4 text-capitalize"
         >
+          {{ keyword.name }}
+        </button>
       </div>
     </v-card-text>
     <v-divider v-if="showDivider"></v-divider>

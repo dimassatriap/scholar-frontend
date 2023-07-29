@@ -118,49 +118,7 @@
             </template>
 
             <v-col v-for="(publication, i) in publications" :key="'publication' + i" cols="12">
-              <v-card elevation="0" outlined @click="$router.push(`/research/${publication.id}`)">
-                <v-card-title class="headline">
-                  <div>
-                    {{ publication.name }}
-
-                    <span v-if="publication.publishDate">
-                      ({{ $moment(publication.publishDate).format('YYYY') }})
-                    </span>
-                  </div>
-                </v-card-title>
-                <v-card-subtitle class="mt-n3 subtitle-1 text-justify">
-                  <div v-if="publication.scholar" class="d-flex align-center">
-                    <YAvatar size="32" :src="publication.scholar.image"> </YAvatar>
-                    <div class="ml-2">
-                      {{
-                        $helpers.fullName(
-                          publication.scholar.name,
-                          publication.scholar.frontTitle,
-                          publication.scholar.backTitle
-                        )
-                      }}
-                    </div>
-                  </div>
-                  <div v-if="publication.coAuthor" class="mt-1">
-                    {{ publication.coAuthor.replaceAll(',,', '; ') }}
-                  </div>
-                </v-card-subtitle>
-                <v-card-text>
-                  <div class="ellipsis-2-lines">
-                    {{ publication.abstract }}
-                  </div>
-
-                  <div class="mt-2 d-flex align-center flex-wrap" style="gap: 8px">
-                    <button
-                      v-for="(keyword, j) in publication.keywords"
-                      :key="'keyword-' + i + '-' + j"
-                      class="border pa-1 rounded-4 text-capitalize"
-                    >
-                      {{ keyword.name }}
-                    </button>
-                  </div>
-                </v-card-text>
-              </v-card>
+              <PublicationCard :value="publication" />
             </v-col>
 
             <v-col cols="12">
