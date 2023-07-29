@@ -110,6 +110,10 @@ export default ({ app }, inject) => {
           (v) => (typeof v === 'string' && v.trim().length > 0) || 'Tidak Valid',
           (v) => /^[A-Za-z/\s.()<>*=#%+'@!&0-9_-]+$/.test(v) || 'Format tidak valid.'
         ]
+      case 'general-name':
+        return [
+          (v) => v === '' || v === null || /^[A-Za-z/\s.()<>*=#%+'@!&0-9,;_-]+$/.test(v) || 'Format tidak valid.'
+        ]
       case 'required':
         return [(v) => !!v || 'Harus diisi.']
       case 'name':
@@ -713,6 +717,15 @@ export default ({ app }, inject) => {
       tagline: 'Portal Publikasi Universitas Padjadjaran'
     }
     return business
+  }
+
+  helper.fullName = (name, frontTitle, backTitle) => {
+    let fullName = name;
+
+    if (frontTitle) fullName = frontTitle + ' ' + fullName
+    if (backTitle) fullName =  fullName + ', ' + backTitle
+
+    return fullName
   }
 
   inject('helpers', helper)

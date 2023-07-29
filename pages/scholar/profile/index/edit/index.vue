@@ -73,6 +73,36 @@
             :rules="$helpers.formRules('required')"
           />
 
+          <v-container class="pa-0 mb-4">
+            <v-row dense>
+              <v-col cols="12" sm="6">
+                <YInput
+                  id="front-title"
+                  v-model="form.frontTitle"
+                  placeholder="Masukan Gelar Depan"
+                  label="Gelar Depan"
+                  :rules="$helpers.formRules('general-name')"
+                />
+              </v-col>
+
+              <v-col cols="12" sm="6">
+                <YInput
+                  id="back-title"
+                  v-model="form.backTitle"
+                  placeholder="Masukan Gelar Belakang"
+                  label="Gelar Belakang"
+                />
+              </v-col>
+
+              <v-col cols="12">
+                <div>
+                  Nama dengan Gelar:
+                  <span class="text--primary">{{ $helpers.fullName(form.name, form.frontTitle, form.backTitle) }}</span>
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
+
           <v-menu
             ref="menuBirthDate"
             v-model="metadataForm.menuBirthDate"
@@ -197,7 +227,9 @@ export default {
         birthDate: null,
         gender: null,
         phone: null,
-        departmentId: null
+        departmentId: null,
+        frontTitle: null,
+        backTitle: null
       },
       metadataForm: {
         menuBirthDate: false,
@@ -292,17 +324,16 @@ export default {
     },
 
     setForm() {
-      this.form.image = this.scholar.image
-      this.form.name = this.scholar.name
+      this.form = {
+        ...this.scholar
+      }
+
       if (this.scholar.birthDate) {
         this.form.birthDate = this.$moment(this.scholar.birthDate).format('YYYY-MM-DD')
       }
-      this.form.gender = this.scholar.gender
       if (this.scholar.phone) {
         this.form.phone = this.$helpers.remove62FromMsisdn(this.scholar.phone)
       }
-      this.form.address = this.scholar.address
-      this.form.departmentId = this.scholar.departmentId
     },
 
     previewFile(src) {

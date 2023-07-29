@@ -132,7 +132,13 @@
                   <div v-if="publication.scholar" class="d-flex align-center">
                     <YAvatar size="32" :src="publication.scholar.image"> </YAvatar>
                     <div class="ml-2">
-                      {{ publication.scholar.name }}
+                      {{
+                        $helpers.fullName(
+                          publication.scholar.name,
+                          publication.scholar.frontTitle,
+                          publication.scholar.backTitle
+                        )
+                      }}
                     </div>
                   </div>
                   <div v-if="publication.coAuthor" class="mt-1">

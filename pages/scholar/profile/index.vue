@@ -7,7 +7,9 @@
             class="primary py-6 px-4 px-sm-6 rounded-sm-t-8 d-flex flex-column align-center justify-center white--text"
             style="height: 112px"
           >
-            <div class="text-capitalize">{{ scholar.name }}</div>
+            <div class="text-capitalize">
+              {{ $helpers.fullName(scholar.name, scholar.frontTitle, scholar.backTitle) }}
+            </div>
           </div>
           <div class="py-6 px-4 px-sm-6 white rounded-sm-b-8">
             <YAvatar class="border-4-white mb-6" :src="scholar.image" size="104" style="margin-top: -76px" />

@@ -37,7 +37,9 @@
           <v-card elevation="0" outlined @click="$router.push(`/profiles/${scholar.id}`)">
             <v-list-item three-line>
               <v-list-item-content>
-                <div class="subtitle-1 font-weight-medium text--primary">{{ scholar.name }}</div>
+                <div class="subtitle-1 font-weight-medium text--primary">
+                  {{ $helpers.fullName(scholar.name, scholar.frontTitle, scholar.backTitle) }}
+                </div>
                 <v-list-item-title class="subtitle-2 font-weight-regular">
                   {{ scholar.email }}
                 </v-list-item-title>

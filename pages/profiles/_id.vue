@@ -14,7 +14,9 @@
       </v-col>
 
       <v-col cols="12" sm="10">
-        <h2 v-if="scholar.name" class="font-weight-medium">{{ scholar.name }}</h2>
+        <h2 v-if="scholar.name" class="font-weight-medium">
+          {{ $helpers.fullName(scholar.name, scholar.frontTitle, scholar.backTitle) }}
+        </h2>
 
         <div v-if="scholar.email" class="text-h6 text--secondary font-weight-regular" style="word-break: break-all">
           {{ scholar.email }}

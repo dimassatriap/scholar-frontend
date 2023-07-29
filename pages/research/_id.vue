@@ -21,7 +21,9 @@
         >
           <YAvatar size="32" :src="publication.scholar.image"> </YAvatar>
           <div v-if="publication.scholar.name" class="ml-2 text-h6 text--secondary font-weight-regular">
-            {{ publication.scholar.name }}
+            {{
+              $helpers.fullName(publication.scholar.name, publication.scholar.frontTitle, publication.scholar.backTitle)
+            }}
           </div>
         </div>
 

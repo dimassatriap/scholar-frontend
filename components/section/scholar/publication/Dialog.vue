@@ -131,8 +131,8 @@
                   :items="scholars"
                   multiple
                   hide-selected
-                  item-text="name"
-                  item-value="name"
+                  item-text="fullName"
+                  item-value="fullName"
                   placeholder="Masukan Penulis Lainnya"
                   no-data-text="Tidak ada penulis lainnya"
                   chips
@@ -151,7 +151,7 @@
                       <v-avatar left>
                         <v-img :src="data.item.image"></v-img>
                       </v-avatar>
-                      {{ data.item.name }}
+                      {{ data.item.fullName }}
                     </v-chip>
                   </template>
 
@@ -160,7 +160,7 @@
                       <img :src="data.item.image" />
                     </v-list-item-avatar>
                     <v-list-item-content>
-                      <v-list-item-title>{{ data.item.name }}</v-list-item-title>
+                      <v-list-item-title>{{ data.item.fullName }}</v-list-item-title>
                     </v-list-item-content>
                   </template>
                 </v-autocomplete>
@@ -280,7 +280,15 @@ export default {
 
   computed: {
     scholars() {
-      return this.allScholars.filter((e) => e.id !== this.scholar.id)
+      const filteredScholars = this.allScholars.filter((e) => e.id !== this.scholar.id)
+      const formattedScholars = filteredScholars.map((e) => {
+        return {
+          ...e,
+          fullName: this.$helpers.fullName(e.name, e.frontTitle, e.backTitle)
+        }
+      })
+
+      return formattedScholars
     },
     formDateFormatted() {
       return this.form.publishDate ? this.$moment(this.form.publishDate).format('DD MMMM YYYY') : ''
@@ -387,7 +395,7 @@ export default {
     },
 
     remove(item) {
-      const index = this.form.coAuthor.indexOf(item.name)
+      const index = this.form.coAuthor.indexOf(item.fullName)
       if (index >= 0) this.form.coAuthor.splice(index, 1)
     },
 
