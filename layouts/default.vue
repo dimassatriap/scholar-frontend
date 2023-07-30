@@ -258,7 +258,7 @@ export default {
           const a = await this.$repo.auth.postHelpdesk(this.form)
           const res = a.data
           if (res && res.status) {
-            this.$YAlert.show({ content: 'Pesan anda berhasil terkirim. Terima kasih.', timeout: '3000' })
+            this.$YAlert.show({ content: 'Pesan anda berhasil terkirim.', timeout: '3000' })
             this.helpDialog = false
             this.cleanForm()
           } else {

@@ -28,7 +28,7 @@
           ></v-text-field>
           <v-spacer></v-spacer>
           <v-btn color="primary" dark class="mb-2" @click="showDialog"> Publikasi Baru </v-btn>
-          <v-dialog v-model="dialog" max-width="650px" eager>
+          <v-dialog v-model="dialog" max-width="650px" eager scrollable>
             <v-card>
               <v-card-text class="text--primary">
                 <h3 class="mb-4">{{ formTitle }}</h3>
