@@ -116,14 +116,25 @@
                 </v-radio-group>
               </v-col>
 
-              <v-col v-if="publicationType == 'journal'" cols="12">
-                <YInput
-                  id="input-journal"
-                  v-model="form.journal"
-                  placeholder="Masukan Nama Jurnal"
-                  label="Nama Jurnal"
-                />
-              </v-col>
+              <template v-if="publicationType == 'journal'">
+                <v-col cols="12">
+                  <YInput
+                    id="input-journal"
+                    v-model="form.journal"
+                    placeholder="Masukan Nama Jurnal"
+                    label="Nama Jurnal"
+                  />
+                </v-col>
+
+                <v-col cols="12">
+                  <YInput
+                    id="input-journal-edition"
+                    v-model="form.journalEdition"
+                    placeholder="Masukan Edisi Jurnal"
+                    label="Edisi Jurnal"
+                  />
+                </v-col>
+              </template>
 
               <v-col v-if="publicationType == 'conference'" cols="12">
                 <YInput
@@ -286,7 +297,8 @@ export default {
       coAuthor: null,
       keywords: null,
       link: null,
-      publishDate: null
+      publishDate: null,
+      journalEdition: null
     }
 
     return {
@@ -371,7 +383,8 @@ export default {
         coAuthor: null,
         keywords: null,
         link: null,
-        publishDate: null
+        publishDate: null,
+        journalEdition: null
       }
       this.formKeywords = null
       this.publicationType = 'journal'

@@ -94,7 +94,8 @@ export default {
         const a = await this.$repo.publication.getPublications({
           withScholars: true,
           firstAuthors: this.scholar.id,
-          limit: -1
+          limit: -1,
+          validated: 'all'
         })
         const res = a.data
         if (res && res.status) {

@@ -10,6 +10,10 @@
       <v-progress-linear color="primary" height="10" indeterminate></v-progress-linear>
     </template>
     <v-card-text :class="{ 'px-0': flat, 'pt-sm-6 px-sm-6': !flat, 'py-0': !showDivider }">
+      <div v-if="value.validated == false" class="mb-2">
+        <YLabel error>Menunggu Verifikasi Admin</YLabel>
+      </div>
+
       <div class="text-body1 text--primary bold">
         {{ value.name }}
         <span v-if="value.publishDate">({{ $moment(value.publishDate).format('YYYY') }})</span>
@@ -26,10 +30,15 @@
         {{ value.coAuthor.replaceAll(',,', '; ') }}
       </div>
 
-      <div class="text-body2 mt-1">
-        <i>{{ value.journal }}</i>
+      <div class="mb-4"></div>
+
+      <div v-if="value.journal" class="text-body2 mt-1">
+        <i>
+          {{ value.journal }}
+          <span v-if="value.journalEdition">{{ value.journalEdition }}</span>
+        </i>
       </div>
-      <div class="text-body2 mt-1">
+      <div v-if="value.conference" class="text-body2 mt-1">
         <i>{{ value.conference }}</i>
       </div>
 
@@ -37,7 +46,7 @@
         {{ value.abstract }}
       </div>
 
-      <div class="mt-2 d-flex align-center flex-wrap" style="gap: 8px">
+      <div v-if="value.keywords && value.keywords.length" class="mt-2 d-flex align-center flex-wrap" style="gap: 8px">
         <button
           v-for="(keyword, j) in value.keywords"
           :key="'keyword-' + value.id + '-' + j"

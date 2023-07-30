@@ -78,7 +78,9 @@
       </v-col>
 
       <v-col cols="12" sm="9">
-        <div>{{ publication.journal }}</div>
+        <div>
+          {{ publication.journal }} <span v-if="publication.journalEdition">{{ publication.journalEdition }}</span>
+        </div>
       </v-col>
     </v-row>
 

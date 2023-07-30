@@ -166,6 +166,14 @@
                           </template>
                         </v-autocomplete>
                       </v-col>
+
+                      <v-col cols="12">
+                        <div class="mb-1 text-truncate">
+                          <label for="input-validated" class="text-body2 sblack60--text"> Tervalidasi </label>
+                        </div>
+
+                        <v-switch v-model="editedItem.validated" hide-details dense class="mt-1"></v-switch>
+                      </v-col>
                     </v-row>
                   </v-container>
                 </v-form>
@@ -252,6 +260,7 @@ export default {
         { text: 'Id Akun', value: 'accountId' },
         { text: 'Tanggal Dibuat', value: 'createdAt' },
         { text: 'Tanggal Diubah', value: 'updatedAt' },
+        { text: 'Tervalidasi', value: 'validated' },
         { text: 'Actions', value: 'actions', sortable: false }
       ],
       scholars: [],
@@ -270,7 +279,8 @@ export default {
         gender: null,
         birthDate: null,
         createdAt: null,
-        updatedAt: null
+        updatedAt: null,
+        validated: false
       },
       defaultItem: {
         id: null,
@@ -281,7 +291,8 @@ export default {
         gender: null,
         birthDate: null,
         createdAt: null,
-        updatedAt: null
+        updatedAt: null,
+        validated: false
       },
       metadataForm: {
         menuBirthDate: false
@@ -347,7 +358,10 @@ export default {
     async fetchScholars(options) {
       try {
         this.loading = true
-        const a = await this.$repo.scholar.getScholars(options)
+        const a = await this.$repo.scholar.getScholars({
+          ...options,
+          validated: 'all'
+        })
         const res = a.data
         if (res && res.status) {
           this.scholars = res.results

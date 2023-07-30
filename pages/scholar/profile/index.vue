@@ -46,6 +46,19 @@
               <div class="">Alamat</div>
               <div class="mt-1">{{ !!scholar.address ? scholar.address : '-' }}</div>
             </div>
+
+            <div class="mt-4 text-body2 rounded-4 border pa-4">
+              <div class="d-flex align-center">
+                Status Akun
+
+                <div v-if="scholar.validated == false" class="ml-3">
+                  <YLabel error>Menunggu Verifikasi Admin</YLabel>
+                </div>
+                <div v-else class="ml-2">
+                  <YLabel success>Terverifikasi</YLabel>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
 
@@ -125,9 +138,23 @@ export default {
     }
   },
 
+  mounted() {
+    this.getScholarById(this.scholar.id)
+  },
+
   methods: {
     logout() {
       this.$router.push('/logout')
+    },
+
+    async getScholarById(id) {
+      try {
+        const a = await this.$repo.scholar.getScholarById(id)
+        const res = a.data
+        if (res && res.status) {
+          this.$store.commit('scholar/SET_SCHOLAR', res.results)
+        }
+      } catch (e) {}
     }
   }
 }

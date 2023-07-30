@@ -253,6 +253,14 @@
                           ></v-date-picker>
                         </v-menu>
                       </v-col>
+
+                      <v-col cols="12">
+                        <div class="mb-1 text-truncate">
+                          <label for="input-validated" class="text-body2 sblack60--text"> Tervalidasi </label>
+                        </div>
+
+                        <v-switch v-model="editedItem.validated" hide-details dense class="mt-1"></v-switch>
+                      </v-col>
                     </v-row>
                   </v-container>
                 </v-form>
@@ -346,6 +354,7 @@ export default {
         { text: 'ID Scholar', value: 'scholarId' },
         { text: 'Tanggal Dibuat', value: 'createdAt' },
         { text: 'Tanggal Diubah', value: 'updatedAt' },
+        { text: 'Tervalidasi', value: 'validated' },
         { text: 'Actions', value: 'actions', sortable: false }
       ],
       publications: [],
@@ -371,7 +380,8 @@ export default {
         conference: null,
         link: null,
         createdAt: null,
-        updatedAt: null
+        updatedAt: null,
+        validated: false
       },
       defaultItem: {
         id: null,
@@ -389,7 +399,8 @@ export default {
         conference: null,
         link: null,
         createdAt: null,
-        updatedAt: null
+        updatedAt: null,
+        validated: false
       },
       metadataForm: {
         menuPublishDate: false,
@@ -449,7 +460,9 @@ export default {
   methods: {
     async fetchScholars() {
       try {
-        const a = await this.$repo.scholar.getScholars()
+        const a = await this.$repo.scholar.getScholars({
+          validated: 'all'
+        })
         const res = a.data
         if (res && res.status) {
           this.scholars = res.results
@@ -460,7 +473,10 @@ export default {
     async fetchPublications(options) {
       try {
         this.loading = true
-        const a = await this.$repo.publication.getPublications(options)
+        const a = await this.$repo.publication.getPublications({
+          ...options,
+          validated: 'all'
+        })
         const res = a.data
         if (res && res.status) {
           this.publications = res.results
