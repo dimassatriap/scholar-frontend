@@ -69,7 +69,20 @@
               </v-col>
 
               <v-col cols="12" sm="6">
-                <YInput id="publication-language" v-model="form.language" placeholder="Masukan Bahasa" label="Bahasa" />
+                <div class="mb-1 text-truncate">
+                  <label for="publication-language" class="text-body2 sblack60--text"> Bahasa </label>
+                </div>
+
+                <v-select
+                  id="publication-language"
+                  v-model="form.language"
+                  :items="['English', 'Indonesia']"
+                  placeholder="Masukan Bahasa"
+                  filled
+                  outlined
+                  hide-details
+                  class="px-0"
+                ></v-select>
               </v-col>
 
               <v-col cols="12" sm="6">
@@ -87,6 +100,23 @@
               </v-col>
 
               <v-col cols="12">
+                <div class="text-truncate">
+                  <label for="input-publication-type" class="text-body2 sblack60--text"> Tipe Publikasi </label>
+                </div>
+
+                <v-radio-group
+                  id="input-publication-type"
+                  v-model="publicationType"
+                  row
+                  hide-details="auto"
+                  class="mt-1"
+                >
+                  <v-radio label="Jurnal" value="journal"></v-radio>
+                  <v-radio label="Konferensi" value="conference"></v-radio>
+                </v-radio-group>
+              </v-col>
+
+              <v-col v-if="publicationType == 'journal'" cols="12">
                 <YInput
                   id="input-journal"
                   v-model="form.journal"
@@ -95,7 +125,7 @@
                 />
               </v-col>
 
-              <v-col cols="12">
+              <v-col v-if="publicationType == 'conference'" cols="12">
                 <YInput
                   id="conference"
                   v-model="form.conference"
@@ -274,7 +304,8 @@ export default {
       itemsPerPage: -1,
       isSearchingScholarLoading: false,
       isSearchingKeywordLoading: false,
-      searchKeyword: null
+      searchKeyword: null,
+      publicationType: 'journal'
     }
   },
 
@@ -343,6 +374,7 @@ export default {
         publishDate: null
       }
       this.formKeywords = null
+      this.publicationType = 'journal'
 
       this.$refs.form.resetValidation()
     },
@@ -355,6 +387,12 @@ export default {
       if (publication.keywords?.length) this.formKeywords = publication.keywords
       if (publication.publishDate) {
         this.form.publishDate = this.$moment(publication.publishDate).format('YYYY-MM-DD')
+      }
+
+      if (publication.conference) {
+        this.publicationType = 'conference'
+      } else {
+        this.publicationType = 'journal'
       }
     },
 

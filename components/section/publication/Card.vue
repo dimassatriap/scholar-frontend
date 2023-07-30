@@ -19,6 +19,13 @@
       </div>
     </v-card-subtitle>
     <v-card-text>
+      <div v-if="value.journal" class="mb-1">
+        <i>{{ value.journal }}</i>
+      </div>
+      <div v-if="value.conference" class="mb-1">
+        <i>{{ value.conference }}</i>
+      </div>
+
       <div class="ellipsis-2-lines">
         {{ value.abstract }}
       </div>

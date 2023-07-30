@@ -389,6 +389,16 @@
               </v-dialog>
             </div>
           </div>
+
+          <div class="mt-6">
+            <div class="text-subtitle2">Tipe Publikasi</div>
+
+            <v-radio-group id="input-publication-type" v-model="publicationType" hide-details="auto" class="mt-2">
+              <v-radio label="Semua" value="all"></v-radio>
+              <v-radio label="Jurnal" value="journal"></v-radio>
+              <v-radio label="Konferensi" value="conference"></v-radio>
+            </v-radio-group>
+          </div>
         </v-col>
         <v-col cols="12" lg="9">
           <v-row justify="center" align="center">
@@ -464,7 +474,8 @@ export default {
       firstAuthorsSearch: null,
       selectedOtherAuthors: [],
       otherAuthorsDialog: false,
-      otherAuthorsSearch: null
+      otherAuthorsSearch: null,
+      publicationType: 'all'
     }
   },
 
@@ -577,6 +588,14 @@ export default {
         this.page = 1
         this.fetchPublications()
       }, 1000)
+    },
+
+    publicationType() {
+      clearTimeout(this._publicationTypeTimerId)
+      this._publicationTypeTimerId = setTimeout(() => {
+        this.page = 1
+        this.fetchPublications()
+      }, 1000)
     }
   },
 
@@ -607,7 +626,8 @@ export default {
           orderPublishDate: this.orderPublishDate,
           publishYear: this.selectedPublishYears.join(','),
           firstAuthors: this.selectedFirstAuthors.join(','),
-          otherAuthors: this.selectedOtherAuthors.join(',')
+          otherAuthors: this.selectedOtherAuthors.join(','),
+          publicationType: this.publicationType
         })
         const res = a.data
         if (res && res.status) {
