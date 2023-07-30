@@ -65,7 +65,6 @@ export default {
       if (this.$refs.form.validate()) {
         this.errorMessage = {}
         this.loading = true
-        console.log(process.env.ADMIN_PASSWORD)
         try {
           const res = this.form.password === process.env.ADMIN_PASSWORD
           if (res) {

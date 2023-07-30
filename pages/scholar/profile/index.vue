@@ -7,7 +7,9 @@
             class="primary py-6 px-4 px-sm-6 rounded-sm-t-8 d-flex flex-column align-center justify-center white--text"
             style="height: 112px"
           >
-            <div class="text-capitalize">{{ scholar.name }}</div>
+            <div class="text-capitalize">
+              {{ $helpers.fullName(scholar.name, scholar.frontTitle, scholar.backTitle) }}
+            </div>
           </div>
           <div class="py-6 px-4 px-sm-6 white rounded-sm-b-8">
             <YAvatar class="border-4-white mb-6" :src="scholar.image" size="104" style="margin-top: -76px" />
@@ -29,7 +31,7 @@
 
             <div class="mt-4 text-body2 rounded-4 border pa-4">
               <div class="">
-                Departemen:
+                Program Studi:
                 <span v-if="!!scholar.department">
                   {{ `${scholar.department.name}` }}
                   <span v-if="!!scholar.department.faculty">
@@ -43,6 +45,19 @@
             <div class="mt-4 text-body2 rounded-4 border pa-4">
               <div class="">Alamat</div>
               <div class="mt-1">{{ !!scholar.address ? scholar.address : '-' }}</div>
+            </div>
+
+            <div class="mt-4 text-body2 rounded-4 border pa-4">
+              <div class="d-flex align-center">
+                Status Akun
+
+                <div v-if="scholar.validated == false" class="ml-3">
+                  <YLabel error>Menunggu Verifikasi Admin</YLabel>
+                </div>
+                <div v-else class="ml-2">
+                  <YLabel success>Terverifikasi</YLabel>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -123,9 +138,23 @@ export default {
     }
   },
 
+  mounted() {
+    this.getScholarById(this.scholar.id)
+  },
+
   methods: {
     logout() {
       this.$router.push('/logout')
+    },
+
+    async getScholarById(id) {
+      try {
+        const a = await this.$repo.scholar.getScholarById(id)
+        const res = a.data
+        if (res && res.status) {
+          this.$store.commit('scholar/SET_SCHOLAR', res.results)
+        }
+      } catch (e) {}
     }
   }
 }

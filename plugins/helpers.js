@@ -110,6 +110,10 @@ export default ({ app }, inject) => {
           (v) => (typeof v === 'string' && v.trim().length > 0) || 'Tidak Valid',
           (v) => /^[A-Za-z/\s.()<>*=#%+'@!&0-9_-]+$/.test(v) || 'Format tidak valid.'
         ]
+      case 'general-name':
+        return [
+          (v) => v === '' || v === null || /^[A-Za-z/\s.()<>*=#%+'@!&0-9,;_-]+$/.test(v) || 'Format tidak valid.'
+        ]
       case 'required':
         return [(v) => !!v || 'Harus diisi.']
       case 'name':
@@ -135,15 +139,15 @@ export default ({ app }, inject) => {
       case 'phone':
         return [
           (v) => !!v || 'No. Hp harus diisi',
-          (v) => /^[8][0-9]{8,12}$/.test(v) || `${v} tidak sesuai dengan format '8xxxxxxxxx' (9-13 digit angka)`
+          (v) => /^[0-9]{8,12}$/.test(v) || `${v} tidak sesuai dengan format (8-12 digit angka)`
         ]
       case 'optional-phone':
         return [
           (v) =>
             v === null ||
             v === '' ||
-            /^[8][0-9]{8,12}$/.test(v) ||
-            `${v} tidak sesuai dengan format '8xxxxxxxxx' (9-13 digit angka)`
+            /^[0-9]{8,12}$/.test(v) ||
+            `${v} tidak sesuai dengan format (8-12 digit angka)`
         ]
       default:
         return []
@@ -713,6 +717,15 @@ export default ({ app }, inject) => {
       tagline: 'Portal Publikasi Universitas Padjadjaran'
     }
     return business
+  }
+
+  helper.fullName = (name, frontTitle, backTitle) => {
+    let fullName = name;
+
+    if (frontTitle) fullName = frontTitle + ' ' + fullName
+    if (backTitle) fullName =  fullName + ', ' + backTitle
+
+    return fullName
   }
 
   inject('helpers', helper)

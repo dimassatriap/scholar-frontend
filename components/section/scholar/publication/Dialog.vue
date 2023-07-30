@@ -16,14 +16,6 @@
         </YBtn>
       </v-card-title>
       <v-card-text>
-        <MessageInfo
-          :messages.sync="errorMessage"
-          class="mb-4"
-          card-class="sred20"
-          text-class="sblack--text"
-          icon-color="sred60"
-        />
-
         <v-form ref="form" v-model="isValid" lazy-validation>
           <v-container>
             <v-row dense>
@@ -31,8 +23,8 @@
                 <YInput
                   id="publication-name"
                   v-model="form.name"
-                  placeholder="Masukan Nama Publikasi"
-                  label="Nama Publikasi"
+                  placeholder="Masukan Judul Publikasi"
+                  label="Judul Publikasi"
                   :rules="$helpers.formRules('required')"
                 />
               </v-col>
@@ -77,7 +69,20 @@
               </v-col>
 
               <v-col cols="12" sm="6">
-                <YInput id="publication-language" v-model="form.language" placeholder="Masukan Bahasa" label="Bahasa" />
+                <div class="mb-1 text-truncate">
+                  <label for="publication-language" class="text-body2 sblack60--text"> Bahasa </label>
+                </div>
+
+                <v-select
+                  id="publication-language"
+                  v-model="form.language"
+                  :items="['English', 'Indonesia']"
+                  placeholder="Masukan Bahasa"
+                  filled
+                  outlined
+                  hide-details
+                  class="px-0"
+                ></v-select>
               </v-col>
 
               <v-col cols="12" sm="6">
@@ -91,10 +96,47 @@
               </v-col>
 
               <v-col cols="12">
-                <YInput id="input-journal" v-model="form.journal" placeholder="Masukan Nama Jurnal" label="Jurnal" />
+                <YInput id="input-issn" v-model="form.ISSN" placeholder="Masukan ISSN" label="ISSN" />
               </v-col>
 
               <v-col cols="12">
+                <div class="text-truncate">
+                  <label for="input-publication-type" class="text-body2 sblack60--text"> Tipe Publikasi </label>
+                </div>
+
+                <v-radio-group
+                  id="input-publication-type"
+                  v-model="publicationType"
+                  row
+                  hide-details="auto"
+                  class="mt-1"
+                >
+                  <v-radio label="Jurnal" value="journal"></v-radio>
+                  <v-radio label="Konferensi" value="conference"></v-radio>
+                </v-radio-group>
+              </v-col>
+
+              <template v-if="publicationType == 'journal'">
+                <v-col cols="12">
+                  <YInput
+                    id="input-journal"
+                    v-model="form.journal"
+                    placeholder="Masukan Nama Jurnal"
+                    label="Nama Jurnal"
+                  />
+                </v-col>
+
+                <v-col cols="12">
+                  <YInput
+                    id="input-journal-edition"
+                    v-model="form.journalEdition"
+                    placeholder="Masukan Edisi Jurnal"
+                    label="Edisi Jurnal"
+                  />
+                </v-col>
+              </template>
+
+              <v-col v-if="publicationType == 'conference'" cols="12">
                 <YInput
                   id="conference"
                   v-model="form.conference"
@@ -111,7 +153,6 @@
                   id="input-abstraction"
                   v-model="form.abstract"
                   placeholder="Masukan Abstrak"
-                  :rows="isXs ? 2 : 1"
                   auto-grow
                   filled
                   outlined
@@ -131,8 +172,8 @@
                   :items="scholars"
                   multiple
                   hide-selected
-                  item-text="name"
-                  item-value="name"
+                  item-text="fullName"
+                  item-value="fullName"
                   placeholder="Masukan Penulis Lainnya"
                   no-data-text="Tidak ada penulis lainnya"
                   chips
@@ -151,7 +192,7 @@
                       <v-avatar left>
                         <v-img :src="data.item.image"></v-img>
                       </v-avatar>
-                      {{ data.item.name }}
+                      {{ data.item.fullName }}
                     </v-chip>
                   </template>
 
@@ -160,7 +201,7 @@
                       <img :src="data.item.image" />
                     </v-list-item-avatar>
                     <v-list-item-content>
-                      <v-list-item-title>{{ data.item.name }}</v-list-item-title>
+                      <v-list-item-title>{{ data.item.fullName }}</v-list-item-title>
                     </v-list-item-content>
                   </template>
                 </v-autocomplete>
@@ -168,7 +209,7 @@
 
               <v-col cols="12">
                 <div class="mb-1 text-truncate">
-                  <label for="input-keyword" class="text-body2 sblack60--text"> Kata Kunci </label>
+                  <label for="input-keyword" class="text-body2 sblack60--text"> Kata Kunci (keyword) </label>
                 </div>
                 <v-combobox
                   id="input-keyword"
@@ -181,7 +222,7 @@
                   small-chips
                   item-text="name"
                   item-value="id"
-                  placeholder="Masukan Kata Kunci"
+                  placeholder="Masukan Kata Kunci (keyword)"
                   no-data-text="Tidak ada kata kunci lainnya"
                   filled
                   outlined
@@ -199,11 +240,22 @@
                   </template>
                 </v-combobox>
               </v-col>
+
+              <v-col cols="12">
+                <YInput id="input-link" v-model="form.link" placeholder="Masukan Pranala Publikasi" label="Pranala" />
+              </v-col>
             </v-row>
           </v-container>
         </v-form>
       </v-card-text>
-      <v-card-actions>
+      <v-card-actions class="flex-column align-stretch">
+        <MessageInfo
+          :messages.sync="errorMessage"
+          card-class="sred20"
+          text-class="sblack--text"
+          icon-color="sred60"
+          class="mb-4"
+        />
         <YBtn large class="flex-grow-1" :disabled="!isValid" :loading="isSubmitLoading" @click="submit"> Simpan </YBtn>
       </v-card-actions>
     </v-card>
@@ -238,12 +290,15 @@ export default {
       abstract: null,
       language: null,
       totalPages: null,
+      ISSN: null,
       journal: null,
       conference: null,
       scholarId: null,
       coAuthor: null,
       keywords: null,
-      publishDate: null
+      link: null,
+      publishDate: null,
+      journalEdition: null
     }
 
     return {
@@ -261,13 +316,22 @@ export default {
       itemsPerPage: -1,
       isSearchingScholarLoading: false,
       isSearchingKeywordLoading: false,
-      searchKeyword: null
+      searchKeyword: null,
+      publicationType: 'journal'
     }
   },
 
   computed: {
     scholars() {
-      return this.allScholars.filter((e) => e.id !== this.scholar.id)
+      const filteredScholars = this.allScholars.filter((e) => e.id !== this.scholar.id)
+      const formattedScholars = filteredScholars.map((e) => {
+        return {
+          ...e,
+          fullName: this.$helpers.fullName(e.name, e.frontTitle, e.backTitle)
+        }
+      })
+
+      return formattedScholars
     },
     formDateFormatted() {
       return this.form.publishDate ? this.$moment(this.form.publishDate).format('DD MMMM YYYY') : ''
@@ -276,6 +340,7 @@ export default {
 
   watch: {
     editPublication(editPublication) {
+      this.errorMessage = {}
       if (editPublication && this.$helpers.isObject(editPublication)) {
         this.fillFormWithEditPublication(editPublication)
       } else {
@@ -312,29 +377,35 @@ export default {
         abstract: null,
         language: null,
         totalPages: null,
+        ISSN: null,
         journal: null,
         conference: null,
         coAuthor: null,
         keywords: null,
-        publishDate: null
+        link: null,
+        publishDate: null,
+        journalEdition: null
       }
       this.formKeywords = null
+      this.publicationType = 'journal'
 
       this.$refs.form.resetValidation()
     },
 
     fillFormWithEditPublication(publication) {
-      this.form.id = publication.id
-      this.form.name = publication.name
-      this.form.abstract = publication.abstract
-      this.form.language = publication.language
-      this.form.totalPages = publication.totalPages
-      this.form.journal = publication.journal
-      this.form.conference = publication.conference
+      this.form = {
+        ...publication
+      }
       if (publication.coAuthor) this.form.coAuthor = publication.coAuthor.split(',,')
       if (publication.keywords?.length) this.formKeywords = publication.keywords
       if (publication.publishDate) {
         this.form.publishDate = this.$moment(publication.publishDate).format('YYYY-MM-DD')
+      }
+
+      if (publication.conference) {
+        this.publicationType = 'conference'
+      } else {
+        this.publicationType = 'journal'
       }
     },
 
@@ -375,7 +446,7 @@ export default {
     },
 
     remove(item) {
-      const index = this.form.coAuthor.indexOf(item.name)
+      const index = this.form.coAuthor.indexOf(item.fullName)
       if (index >= 0) this.form.coAuthor.splice(index, 1)
     },
 

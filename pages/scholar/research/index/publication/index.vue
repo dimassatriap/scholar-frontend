@@ -14,7 +14,7 @@
       </div>
     </template>
 
-    <div v-for="(publication, i) in publications" :key="'publication' + i" class="mb-6">
+    <div v-for="(publication, j) in publications" :key="'publication' + j" class="mb-6">
       <ScholarPublicationCard
         :value="publication"
         @edit="
@@ -32,6 +32,26 @@
       @close="clearEditPublication"
       @added="getScholarPublications"
     />
+
+    <v-container class="mt-16 pa-0">
+      <v-row>
+        <v-col cols="12" class="text-h4 font-weight-medium">Publikasi Lainnya</v-col>
+
+        <v-col v-if="otherPublications.length < 1 && !otherPublicationLoading" cols="12">
+          <h3 class="py-4">Publikasi Lainnya tidak di temukan</h3>
+        </v-col>
+
+        <template v-if="otherPublicationLoading">
+          <v-col v-for="k in 2" :key="'other-skeleton' + k" cols="12">
+            <v-skeleton-loader :height="isXs ? '16rem' : '11rem'" width="100%" type="image"></v-skeleton-loader>
+          </v-col>
+        </template>
+
+        <v-col v-for="(publication, l) in otherPublications" :key="'other-publication' + l" cols="12">
+          <PublicationCard :value="publication" />
+        </v-col>
+      </v-row>
+    </v-container>
   </div>
 </template>
 
@@ -47,7 +67,9 @@ export default {
       publications: [],
       isEditPublicationDialog: false,
       isAddPublicationDialog: false,
-      selectedEditPublication: null
+      selectedEditPublication: null,
+      otherPublications: [],
+      otherPublicationLoading: false
     }
   },
 
@@ -61,16 +83,23 @@ export default {
 
   mounted() {
     this.getScholarPublications()
+    this.fetchOtherPublications()
   },
 
   methods: {
     async getScholarPublications() {
       try {
         this.isLoading = true
-        const a = await this.$repo.scholar.getScholarByIdWithPublication(this.scholar.id)
+        this.publications = []
+        const a = await this.$repo.publication.getPublications({
+          withScholars: true,
+          firstAuthors: this.scholar.id,
+          limit: -1,
+          validated: 'all'
+        })
         const res = a.data
         if (res && res.status) {
-          this.publications = res.results.publications
+          this.publications = res.results
         }
       } catch (e) {
       } finally {
@@ -90,6 +119,25 @@ export default {
         this.isEditPublicationDialog = false
         this.selectedEditPublication = null
       }, 500)
+    },
+
+    async fetchOtherPublications() {
+      try {
+        this.otherPublicationLoading = true
+        this.otherPublications = []
+        const a = await this.$repo.publication.getPublications({
+          withScholars: true,
+          search: this.$helpers.fullName(this.scholar.name, this.scholar.frontTitle, this.scholar.backTitle),
+          limit: -1
+        })
+        const res = a.data
+        if (res && res.status) {
+          this.otherPublications = res.results
+        }
+      } catch (e) {
+      } finally {
+        this.otherPublicationLoading = false
+      }
     }
   }
 }

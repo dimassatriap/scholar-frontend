@@ -14,7 +14,9 @@
       </v-col>
 
       <v-col cols="12" sm="10">
-        <h2 v-if="scholar.name" class="font-weight-medium">{{ scholar.name }}</h2>
+        <h2 v-if="scholar.name" class="font-weight-medium">
+          {{ $helpers.fullName(scholar.name, scholar.frontTitle, scholar.backTitle) }}
+        </h2>
 
         <div v-if="scholar.email" class="text-h6 text--secondary font-weight-regular" style="word-break: break-all">
           {{ scholar.email }}
@@ -26,7 +28,7 @@
         </div>
 
         <div v-if="scholar.phone" class="subtitle-1 text--secondary">
-          {{ 0 + $helpers.remove62FromMsisdn(scholar.phone) }}
+          {{ $helpers.formatPhone(scholar.phone) }}
         </div>
       </v-col>
     </v-row>
@@ -54,42 +56,39 @@
 
     <div class="mt-8"></div>
 
-    <v-row v-if="scholar.publications.length > 0">
+    <v-row>
       <v-col cols="12" class="text-h5 font-weight-medium">Publikasi</v-col>
 
-      <v-col v-for="(publication, i) in scholar.publications" :key="'publication' + i" cols="12">
-        <v-card elevation="0" outlined @click="$router.push(`/research/${publication.id}`)">
-          <v-card-title class="headline"> {{ publication.name }} </v-card-title>
-          <v-card-text>
-            <div class="ellipsis-2-lines">
-              {{ publication.abstract }}
-            </div>
+      <v-col v-if="publications.length < 1 && !publicationLoading" cols="12">
+        <h3 class="py-4">Publikasi tidak di temukan</h3>
+      </v-col>
 
-            <div class="mt-2 d-flex align-center" style="gap: 8px">
-              <button
-                v-for="(keyword, j) in publication.keywords"
-                :key="'keyword-' + i + '-' + j"
-                class="border pa-1 rounded-4"
-              >
-                {{ keyword.name }}
-              </button>
-            </div>
-          </v-card-text>
-        </v-card>
+      <template v-if="publicationLoading">
+        <v-col v-for="i in 3" :key="'skeleton' + i" cols="12">
+          <v-skeleton-loader :height="isXs ? '16rem' : '11rem'" width="100%" type="image"></v-skeleton-loader>
+        </v-col>
+      </template>
+
+      <v-col v-for="(publication, i) in publications" :key="'publication' + i" cols="12">
+        <PublicationCard :value="publication" />
       </v-col>
     </v-row>
   </v-container>
 </template>
 
 <script>
+import breakpointMixin from '~/mixins/breakpoint'
+
 export default {
+  mixins: [breakpointMixin],
   data() {
     return {
       scholarId: this.$route.params.id,
-      scholar: {
-        publications: []
-      },
-      errorMessage: {}
+      loading: false,
+      scholar: {},
+      publications: [],
+      errorMessage: {},
+      publicationLoading: false
     }
   },
 
@@ -105,6 +104,7 @@ export default {
         const res = a.data
         if (res && res.status) {
           this.scholar = res.results
+          this.fetchPublications()
           return res
         } else {
           this.errorMessage = this.$helpers.keysToCamel(res.messages)
@@ -114,6 +114,25 @@ export default {
         this.errorMessage = this.$helpers.keysToCamel(res.messages)
       } finally {
         this.loading = false
+      }
+    },
+
+    async fetchPublications() {
+      try {
+        this.publicationLoading = true
+        this.publications = []
+        const a = await this.$repo.publication.getPublications({
+          withScholars: true,
+          search: this.scholar.name,
+          limit: -1
+        })
+        const res = a.data
+        if (res && res.status) {
+          this.publications = res.results
+        }
+      } catch (e) {
+      } finally {
+        this.publicationLoading = false
       }
     }
   }

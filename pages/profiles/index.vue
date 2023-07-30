@@ -23,11 +23,23 @@
 
     <v-container class="">
       <v-row>
+        <v-col v-if="scholars.length < 1 && !loading" cols="12">
+          <h3 class="py-16">Dosen tidak di temukan</h3>
+        </v-col>
+
+        <template v-if="loading">
+          <v-col v-for="i in 12" :key="'skeleton' + i" cols="12" sm="6" lg="4">
+            <v-skeleton-loader height="7rem" width="100%" type="image"></v-skeleton-loader>
+          </v-col>
+        </template>
+
         <v-col v-for="(scholar, i) in scholars" :key="'scholar' + i" cols="12" sm="6" lg="4">
           <v-card elevation="0" outlined @click="$router.push(`/profiles/${scholar.id}`)">
             <v-list-item three-line>
               <v-list-item-content>
-                <div class="subtitle-1 font-weight-medium text--primary">{{ scholar.name }}</div>
+                <div class="subtitle-1 font-weight-medium text--primary">
+                  {{ $helpers.fullName(scholar.name, scholar.frontTitle, scholar.backTitle) }}
+                </div>
                 <v-list-item-title class="subtitle-2 font-weight-regular">
                   {{ scholar.email }}
                 </v-list-item-title>
@@ -60,7 +72,10 @@
 </template>
 
 <script>
+import breakpointMixin from '~/mixins/breakpoint'
+
 export default {
+  mixins: [breakpointMixin],
   data() {
     return {
       scholars: [],
@@ -88,6 +103,7 @@ export default {
     async fetchScholars() {
       try {
         this.loading = true
+        this.scholars = []
         const a = await this.$repo.scholar.getScholars({
           search: this.search,
           page: this.page

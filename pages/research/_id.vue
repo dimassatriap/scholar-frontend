@@ -12,10 +12,18 @@
 
         <h2 v-if="publication.name" class="font-weight-medium">{{ publication.name }}</h2>
 
-        <div class="mt-4 d-flex align-center">
+        <div
+          v-if="publication.scholar"
+          v-ripple
+          class="mt-4 d-flex align-center"
+          role="button"
+          @click="$router.push(`/profiles/${publication.scholar.id}`)"
+        >
           <YAvatar size="32" :src="publication.scholar.image"> </YAvatar>
           <div v-if="publication.scholar.name" class="ml-2 text-h6 text--secondary font-weight-regular">
-            {{ publication.scholar.name }}
+            {{
+              $helpers.fullName(publication.scholar.name, publication.scholar.frontTitle, publication.scholar.backTitle)
+            }}
           </div>
         </div>
 
@@ -54,13 +62,25 @@
       </v-col>
     </v-row>
 
+    <v-row v-if="publication.ISSN" no-gutters class="mt-2 font-weight-light">
+      <v-col cols="12" sm="3" class="pr-3">
+        <div>ISSN</div>
+      </v-col>
+
+      <v-col cols="12" sm="9">
+        <div>{{ publication.ISSN }}</div>
+      </v-col>
+    </v-row>
+
     <v-row v-if="publication.journal" no-gutters class="mt-2 font-weight-light">
       <v-col cols="12" sm="3" class="pr-3">
         <div>Jurnal</div>
       </v-col>
 
       <v-col cols="12" sm="9">
-        <div>{{ publication.journal }}</div>
+        <div>
+          {{ publication.journal }} <span v-if="publication.journalEdition">{{ publication.journalEdition }}</span>
+        </div>
       </v-col>
     </v-row>
 
@@ -71,6 +91,23 @@
 
       <v-col cols="12" sm="9">
         <div>{{ publication.conference }}</div>
+      </v-col>
+    </v-row>
+
+    <v-row v-if="publication.link" no-gutters class="mt-2 font-weight-light">
+      <v-col cols="12" sm="3" class="pr-3">
+        <div>Pranala</div>
+      </v-col>
+
+      <v-col cols="12" sm="9">
+        <a
+          class="ellipsis-1-lines text-decoration-none"
+          style="word-break: break-all"
+          :href="publication.link"
+          target="_blank"
+        >
+          {{ publication.link }}
+        </a>
       </v-col>
     </v-row>
   </v-container>

@@ -73,6 +73,36 @@
             :rules="$helpers.formRules('required')"
           />
 
+          <v-container class="pa-0 mb-4">
+            <v-row dense>
+              <v-col cols="12" sm="6">
+                <YInput
+                  id="front-title"
+                  v-model="form.frontTitle"
+                  placeholder="Masukan Gelar Depan"
+                  label="Gelar Depan"
+                  :rules="$helpers.formRules('general-name')"
+                />
+              </v-col>
+
+              <v-col cols="12" sm="6">
+                <YInput
+                  id="back-title"
+                  v-model="form.backTitle"
+                  placeholder="Masukan Gelar Belakang"
+                  label="Gelar Belakang"
+                />
+              </v-col>
+
+              <v-col cols="12">
+                <div>
+                  Nama dengan Gelar:
+                  <span class="text--primary">{{ $helpers.fullName(form.name, form.frontTitle, form.backTitle) }}</span>
+                </div>
+              </v-col>
+            </v-row>
+          </v-container>
+
           <v-menu
             ref="menuBirthDate"
             v-model="metadataForm.menuBirthDate"
@@ -99,6 +129,7 @@
                   class="mb-4"
                   append-icon="$CalendarBoldIcon"
                   v-on="on"
+                  @click:append="on.click"
                 ></v-text-field>
               </div>
             </template>
@@ -106,7 +137,7 @@
               v-model="form.birthDate"
               :active-picker.sync="activePicker"
               :max="new Date().toISOString().substr(0, 10)"
-              min="1950-01-01"
+              min="1930-01-01"
               @change="saveBirthDate"
             ></v-date-picker>
           </v-menu>
@@ -123,13 +154,25 @@
             ></v-radio>
           </v-radio-group>
 
+          <div class="mb-4">
+            <YInput
+              id="phone"
+              v-model="form.phone"
+              placeholder="Masukan No. Handphone"
+              label="No. Handphone"
+              prepend-inner-text="+62"
+              type="number"
+              :rules="$helpers.formRules('phone')"
+            />
+          </div>
+
           <div class="mb-1 text-truncate">
-            <label for="input-department-id" class="text-body2 sblack60--text"> Departemen </label>
+            <label for="input-department-id" class="text-body2 sblack60--text"> Program Studi </label>
           </div>
           <v-autocomplete
             id="input-department-id"
             v-model="form.departmentId"
-            placeholder="Masukan Departemen"
+            placeholder="Masukan Program Studi"
             :items="formattedDepartements"
             filled
             outlined
@@ -183,7 +226,10 @@ export default {
         name: null,
         birthDate: null,
         gender: null,
-        departmentId: null
+        phone: null,
+        departmentId: null,
+        frontTitle: null,
+        backTitle: null
       },
       metadataForm: {
         menuBirthDate: false,
@@ -223,7 +269,11 @@ export default {
     },
 
     'metadataForm.menuBirthDate'(val) {
-      val && setTimeout(() => (this.activePicker = 'YEAR'))
+      val &&
+        setTimeout(() => {
+          if (!this.form.birthDate) this.form.birthDate = '1970-01-01'
+          this.activePicker = 'YEAR'
+        })
     },
 
     'form.photo'(val) {
@@ -274,14 +324,16 @@ export default {
     },
 
     setForm() {
-      this.form.image = this.scholar.image
-      this.form.name = this.scholar.name
+      this.form = {
+        ...this.scholar
+      }
+
       if (this.scholar.birthDate) {
         this.form.birthDate = this.$moment(this.scholar.birthDate).format('YYYY-MM-DD')
       }
-      this.form.gender = this.scholar.gender
-      this.form.address = this.scholar.address
-      this.form.departmentId = this.scholar.departmentId
+      if (this.scholar.phone) {
+        this.form.phone = this.$helpers.remove62FromMsisdn(this.scholar.phone)
+      }
     },
 
     previewFile(src) {
@@ -301,8 +353,11 @@ export default {
         this.isSubmitLoading = true
         this.errorMessage = {}
 
+        const scholarForm = { ...form }
+        if (form.phone) scholarForm.phone = 62 + form.phone
+
         try {
-          const a = await this.$repo.scholar.updateScholar(id, form)
+          const a = await this.$repo.scholar.updateScholar(id, scholarForm)
           const res = a.data
           if (res && res.status) {
             this.$store.commit('scholar/SET_SCHOLAR', res.results)

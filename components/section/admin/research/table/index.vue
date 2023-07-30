@@ -28,7 +28,7 @@
           ></v-text-field>
           <v-spacer></v-spacer>
           <v-btn color="primary" dark class="mb-2" @click="showDialog"> Publikasi Baru </v-btn>
-          <v-dialog v-model="dialog" max-width="650px" eager>
+          <v-dialog v-model="dialog" max-width="650px" eager scrollable>
             <v-card>
               <v-card-text class="text--primary">
                 <h3 class="mb-4">{{ formTitle }}</h3>
@@ -48,8 +48,8 @@
                         <YInput
                           id="name"
                           v-model="editedItem.name"
-                          placeholder="Masukan Nama Publikasi"
-                          label="Nama Publikasi"
+                          placeholder="Masukan Judul Publikasi"
+                          label="Judul Publikasi"
                           :rules="$helpers.formRules('required')"
                         />
                       </v-col>
@@ -139,6 +139,10 @@
                       </v-col>
 
                       <v-col cols="12">
+                        <YInput id="ISSN" v-model="editedItem.ISSN" placeholder="Masukan ISSN" label="ISSN" />
+                      </v-col>
+
+                      <v-col cols="12">
                         <YInput
                           id="journal"
                           v-model="editedItem.journal"
@@ -171,6 +175,15 @@
                           v-model="editedItem.conference"
                           placeholder="Masukan Nama Konferensi"
                           label="Nama Konferensi"
+                        />
+                      </v-col>
+
+                      <v-col cols="12">
+                        <YInput
+                          id="link"
+                          v-model="editedItem.link"
+                          placeholder="Masukan Pranala Publikasi"
+                          label="Pranala"
                         />
                       </v-col>
 
@@ -239,6 +252,14 @@
                             @change="saveCreatedDate"
                           ></v-date-picker>
                         </v-menu>
+                      </v-col>
+
+                      <v-col cols="12">
+                        <div class="mb-1 text-truncate">
+                          <label for="input-validated" class="text-body2 sblack60--text"> Tervalidasi </label>
+                        </div>
+
+                        <v-switch v-model="editedItem.validated" hide-details dense class="mt-1"></v-switch>
                       </v-col>
                     </v-row>
                   </v-container>
@@ -322,15 +343,18 @@ export default {
         { text: 'Tanggal', value: 'publishDate' },
         { text: 'Bahasa', value: 'language' },
         { text: 'Total Halaman', value: 'totalPages' },
+        { text: 'ISSN', value: 'ISSN' },
         { text: 'ISBN', value: 'ISBN' },
         { text: 'Jurnal', value: 'journal' },
         { text: 'Penerbit', value: 'publisher' },
         { text: 'Nomor', value: 'number' },
         { text: 'Acara publikasi', value: 'publicationEvent' },
         { text: 'Konferensi', value: 'conference' },
+        { text: 'Pranala', value: 'link' },
         { text: 'ID Scholar', value: 'scholarId' },
         { text: 'Tanggal Dibuat', value: 'createdAt' },
         { text: 'Tanggal Diubah', value: 'updatedAt' },
+        { text: 'Tervalidasi', value: 'validated' },
         { text: 'Actions', value: 'actions', sortable: false }
       ],
       publications: [],
@@ -347,14 +371,17 @@ export default {
         publishDate: null,
         language: null,
         totalPages: null,
+        ISSN: null,
         ISBN: null,
         journal: null,
         publisher: null,
         number: null,
         publicationEvent: null,
         conference: null,
+        link: null,
         createdAt: null,
-        updatedAt: null
+        updatedAt: null,
+        validated: false
       },
       defaultItem: {
         id: null,
@@ -363,14 +390,17 @@ export default {
         publishDate: null,
         language: null,
         totalPages: null,
+        ISSN: null,
         ISBN: null,
         journal: null,
         publisher: null,
         number: null,
         publicationEvent: null,
         conference: null,
+        link: null,
         createdAt: null,
-        updatedAt: null
+        updatedAt: null,
+        validated: false
       },
       metadataForm: {
         menuPublishDate: false,
@@ -430,7 +460,9 @@ export default {
   methods: {
     async fetchScholars() {
       try {
-        const a = await this.$repo.scholar.getScholars()
+        const a = await this.$repo.scholar.getScholars({
+          validated: 'all'
+        })
         const res = a.data
         if (res && res.status) {
           this.scholars = res.results
@@ -441,7 +473,10 @@ export default {
     async fetchPublications(options) {
       try {
         this.loading = true
-        const a = await this.$repo.publication.getPublications(options)
+        const a = await this.$repo.publication.getPublications({
+          ...options,
+          validated: 'all'
+        })
         const res = a.data
         if (res && res.status) {
           this.publications = res.results
