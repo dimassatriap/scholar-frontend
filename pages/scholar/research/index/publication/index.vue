@@ -33,9 +33,9 @@
       @added="getScholarPublications"
     />
 
-    <v-container class="">
+    <v-container class="mt-16 pa-0">
       <v-row>
-        <v-col cols="12" class="text-h5 font-weight-medium">Publikasi Lainnya</v-col>
+        <v-col cols="12" class="text-h4 font-weight-medium">Publikasi Lainnya</v-col>
 
         <v-col v-if="otherPublications.length < 1 && !otherPublicationLoading" cols="12">
           <h3 class="py-4">Publikasi Lainnya tidak di temukan</h3>

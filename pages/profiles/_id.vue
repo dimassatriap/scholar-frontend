@@ -64,7 +64,7 @@
       </v-col>
 
       <template v-if="publicationLoading">
-        <v-col v-for="i in 5" :key="'skeleton' + i" cols="12">
+        <v-col v-for="i in 3" :key="'skeleton' + i" cols="12">
           <v-skeleton-loader :height="isXs ? '16rem' : '11rem'" width="100%" type="image"></v-skeleton-loader>
         </v-col>
       </template>
@@ -77,7 +77,10 @@
 </template>
 
 <script>
+import breakpointMixin from '~/mixins/breakpoint'
+
 export default {
+  mixins: [breakpointMixin],
   data() {
     return {
       scholarId: this.$route.params.id,
