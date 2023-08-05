@@ -371,7 +371,6 @@ export default {
 
     clearForm() {
       this.form = {
-        ...this.form,
         id: null,
         name: null,
         abstract: null,
@@ -380,6 +379,7 @@ export default {
         ISSN: null,
         journal: null,
         conference: null,
+        scholarId: this.scholar.id,
         coAuthor: null,
         keywords: null,
         link: null,
