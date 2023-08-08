@@ -257,6 +257,7 @@
                                 <YAvatar size="32" :src="scholar.image"> </YAvatar>
                                 <div class="ml-2">
                                   {{ $helpers.fullName(scholar.name, scholar.frontTitle, scholar.backTitle) }}
+                                  <span v-if="scholar.publications">({{ scholar.publications.length }})</span>
                                 </div>
                               </div>
                             </template>
