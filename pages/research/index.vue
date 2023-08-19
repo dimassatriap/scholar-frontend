@@ -1,10 +1,15 @@
 <template>
   <div>
-    <div class="header-title">
+    <div v-if="facultyId" class="header-title">
       <v-container class="">
         <v-row justify="center" align="center">
           <v-col cols="12">
-            <h2 class="font-weight-medium">Temukan Publikasi</h2>
+            <h2 v-if="selectedFaculty" class="font-weight-medium mb-4">
+              <YBtn large fab text color="black" @click="$router.push({ path: '/research', query: { search } })">
+                <v-icon> mdi-arrow-left </v-icon>
+              </YBtn>
+              Fakultas {{ selectedFaculty.name }}
+            </h2>
 
             <v-text-field
               id="publication-search"
@@ -24,7 +29,7 @@
     <v-container class="">
       <v-row v-if="!facultyId">
         <v-col cols="12">
-          <h2 class="font-weight-medium">Fakultas</h2>
+          <h2 class="font-weight-medium mt-4">Fakultas</h2>
 
           <v-list>
             <v-list-item
@@ -43,15 +48,6 @@
       </v-row>
 
       <v-row v-else>
-        <v-col v-if="selectedFaculty" cols="12">
-          <h2 class="font-weight-medium mb-4">
-            <YBtn large fab text color="black" @click="$router.push({ path: '/research', query: { search } })">
-              <v-icon> mdi-arrow-left </v-icon>
-            </YBtn>
-            Fakultas {{ selectedFaculty.name }}
-          </h2>
-        </v-col>
-
         <v-col cols="12" lg="3">
           <div class="text-subtitle1">Filter Publikasi</div>
 
@@ -777,6 +773,7 @@ export default {
     '$route.query.facultyId'(newVal) {
       this.facultyId = newVal
       if (newVal) {
+        this.page = 1
         this.facultyId = Number(newVal)
         const faculty = this.faculties.find((e) => e.id === this.facultyId)
         this.selectedFaculty = faculty

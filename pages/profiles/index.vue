@@ -1,10 +1,15 @@
 <template>
   <div>
-    <div class="header-title">
+    <div v-if="facultyId" class="header-title">
       <v-container class="">
         <v-row justify="center" align="center">
           <v-col cols="12">
-            <h2 class="font-weight-medium">Temukan Dosen</h2>
+            <h2 v-if="selectedFaculty" class="font-weight-medium">
+              <YBtn large fab text color="black" @click="$router.push({ path: '/profiles' })">
+                <v-icon> mdi-arrow-left </v-icon>
+              </YBtn>
+              Fakultas {{ selectedFaculty.name }}
+            </h2>
 
             <v-text-field
               id="scholar-search"
@@ -22,7 +27,27 @@
     </div>
 
     <v-container class="">
-      <v-row>
+      <v-row v-if="!facultyId">
+        <v-col cols="12">
+          <h2 class="font-weight-medium mt-4">Fakultas</h2>
+
+          <v-list>
+            <v-list-item
+              v-for="(faculty, i) in faculties"
+              :key="'faculty-' + i"
+              class="text-decoration-none"
+              @click="$router.push({ path: '/profiles', query: { facultyId: faculty.id } })"
+            >
+              <v-list-item-action>
+                <v-icon> mdi-circle-medium </v-icon>
+              </v-list-item-action>
+              <v-list-item-title class="text-h5">{{ faculty.name }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-col>
+      </v-row>
+
+      <v-row v-else>
         <v-col v-if="scholars.length < 1 && !loading" cols="12">
           <h3 class="py-16">Dosen tidak di temukan</h3>
         </v-col>
@@ -81,7 +106,11 @@ export default {
       scholars: [],
       search: null,
       page: 1,
-      totalPage: 1
+      totalPage: 1,
+      facultyId: null,
+      selectedFaculty: {},
+      faculties: [],
+      isFetchingFacultiesLoading: false
     }
   },
 
@@ -92,11 +121,28 @@ export default {
         this.page = 1
         this.fetchScholars()
       }, 1000)
+    },
+
+    '$route.query.facultyId'(newVal) {
+      this.facultyId = newVal
+      if (newVal) {
+        this.page = 1
+        this.facultyId = Number(newVal)
+        const faculty = this.faculties.find((e) => e.id === this.facultyId)
+        this.selectedFaculty = faculty
+        this.fetchScholars()
+      }
     }
   },
 
   created() {
+    this.fetchFaculties()
     this.fetchScholars()
+
+    const facultyId = this.$route.query.facultyId
+    if (facultyId) {
+      this.facultyId = Number(facultyId)
+    }
   },
 
   methods: {
@@ -106,7 +152,8 @@ export default {
         this.scholars = []
         const a = await this.$repo.scholar.getScholars({
           search: this.search,
-          page: this.page
+          page: this.page,
+          facultyIds: this.facultyId
         })
         const res = a.data
         if (res && res.status) {
@@ -121,6 +168,25 @@ export default {
         // this.errorMessage = this.$helpers.keysToCamel(res.messages)
       } finally {
         this.loading = false
+      }
+    },
+
+    async fetchFaculties() {
+      try {
+        this.isFetchingFacultiesLoading = true
+        const a = await this.$repo.university.getFaculties()
+        const res = a.data
+        if (res && res.status) {
+          this.faculties = res.results
+
+          if (this.facultyId && !this.selectedFaculty?.name) {
+            const faculty = this.faculties.find((e) => e.id === this.facultyId)
+            this.selectedFaculty = faculty
+          }
+        }
+      } catch (e) {
+      } finally {
+        this.isFetchingFacultiesLoading = false
       }
     }
   }
