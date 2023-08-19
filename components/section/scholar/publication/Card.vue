@@ -1,15 +1,14 @@
 <template>
-  <v-card
-    :loading="loading"
-    :flat="flat"
-    :class="{ 'shadow-card-sm': !flat }"
-    style="min-height: 100%"
-    @click="$emit('click')"
-  >
+  <v-card :loading="loading" :flat="flat" :class="{ 'shadow-card-sm': !flat }" style="min-height: 100%">
     <template slot="progress">
       <v-progress-linear color="primary" height="10" indeterminate></v-progress-linear>
     </template>
-    <v-card-text :class="{ 'px-0': flat, 'pt-sm-6 px-sm-6': !flat, 'py-0': !showDivider }">
+    <v-card-text
+      v-ripple
+      class="cursor-pointer"
+      :class="{ 'px-0': flat, 'pt-sm-6 px-sm-6': !flat, 'py-0': !showDivider }"
+      @click="$router.push(`/research/${value.id}`)"
+    >
       <div v-if="value.validated == false" class="mb-2">
         <YLabel error>Menunggu Verifikasi Admin</YLabel>
       </div>
