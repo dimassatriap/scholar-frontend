@@ -1,15 +1,20 @@
 <template>
   <div>
-    <div class="header-title">
+    <div v-if="facultyId" class="header-title">
       <v-container class="">
         <v-row justify="center" align="center">
           <v-col cols="12">
-            <h2 class="font-weight-medium">Temukan Publikasi</h2>
+            <h2 v-if="selectedFaculty" class="font-weight-medium mb-4">
+              <YBtn large fab text color="black" @click="$router.push({ path: '/research', query: { search } })">
+                <v-icon> mdi-arrow-left </v-icon>
+              </YBtn>
+              Fakultas {{ selectedFaculty.name }}
+            </h2>
 
             <v-text-field
               id="publication-search"
               v-model="search"
-              placeholder="Cari Publikasi berdasarkan Judul, Abstrak, atau Nama Penulis"
+              placeholder="Cari Publikasi berdasarkan Judul atau Nama Penulis"
               filled
               outlined
               append-icon="mdi-magnify"
@@ -22,7 +27,27 @@
     </div>
 
     <v-container class="">
-      <v-row>
+      <v-row v-if="!facultyId">
+        <v-col cols="12">
+          <h2 class="font-weight-medium mt-4">Fakultas</h2>
+
+          <v-list>
+            <v-list-item
+              v-for="(faculty, i) in faculties"
+              :key="'faculty-' + i"
+              class="text-decoration-none"
+              @click="$router.push({ path: '/research', query: { facultyId: faculty.id, search } })"
+            >
+              <v-list-item-action>
+                <v-icon> mdi-circle-medium </v-icon>
+              </v-list-item-action>
+              <v-list-item-title class="text-h5">{{ faculty.name }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-col>
+      </v-row>
+
+      <v-row v-else>
         <v-col cols="12" lg="3">
           <div class="text-subtitle1">Filter Publikasi</div>
 
@@ -257,6 +282,7 @@
                                 <YAvatar size="32" :src="scholar.image"> </YAvatar>
                                 <div class="ml-2">
                                   {{ $helpers.fullName(scholar.name, scholar.frontTitle, scholar.backTitle) }}
+                                  <span v-if="scholar.publications">({{ scholar.publications.length }})</span>
                                 </div>
                               </div>
                             </template>
@@ -399,6 +425,115 @@
               <v-radio label="Konferensi" value="conference"></v-radio>
             </v-radio-group>
           </div>
+
+          <div v-if="allDepartments.length" class="mt-6">
+            <div class="text-subtitle2">Program Studi</div>
+
+            <div class="mb-2">
+              <v-checkbox
+                v-for="(departement, i) in mappedDepartments"
+                :key="'departement-' + departement.id + '-' + i"
+                v-model="selectedDepartments"
+                :label="departement.name"
+                :value="departement.id"
+                hide-details="auto"
+                dense
+                class="text-capitalize"
+              >
+                <template v-slot:label>
+                  <div class="d-flex align-center">
+                    <div class="">
+                      {{ departement.name }}
+                    </div>
+                  </div>
+                </template>
+              </v-checkbox>
+            </div>
+
+            <div class="d-flex align-center">
+              <v-btn
+                v-if="selectedDepartments.length"
+                text
+                color="primary"
+                class="mr-2 pa-0"
+                min-width="0"
+                @click="selectedDepartments = []"
+              >
+                Hapus
+              </v-btn>
+
+              <v-dialog
+                v-if="allDepartments.length > 5"
+                v-model="departmentsDialog"
+                scrollable
+                eager
+                :fullscreen="isXs"
+                max-width="600"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn color="primary" text class="pa-0" dark v-bind="attrs" v-on="on"> Lainnya... </v-btn>
+                </template>
+
+                <v-card>
+                  <v-card-title class="shadow-nav flex-column align-stretch">
+                    <div class="mb-4 text--primary">Program Studi</div>
+
+                    <v-text-field
+                      id="first-authors-search"
+                      v-model="departmentsSearch"
+                      placeholder="Cari Program Studi"
+                      filled
+                      outlined
+                      append-icon="mdi-magnify"
+                      background-color="white"
+                      hide-details="auto"
+                      class="medium"
+                    />
+                  </v-card-title>
+
+                  <v-card-text>
+                    <v-container class="pa-0">
+                      <v-row dense align="center">
+                        <v-col
+                          v-for="(departement, i) in allDepartments"
+                          :key="'all-departement-' + departement.id + '-' + i"
+                          cols="12"
+                          :class="{
+                            'd-none':
+                              departmentsSearch &&
+                              departement.name &&
+                              !departement.name.toLowerCase().includes(departmentsSearch.toLowerCase())
+                          }"
+                        >
+                          <v-checkbox
+                            v-model="selectedDepartments"
+                            :label="departement.name"
+                            :value="departement.id"
+                            hide-details="auto"
+                            dense
+                            class="text-capitalize"
+                          >
+                            <template v-slot:label>
+                              <div class="d-flex align-center">
+                                <div class="">
+                                  {{ departement.name }}
+                                </div>
+                              </div>
+                            </template>
+                          </v-checkbox>
+                        </v-col>
+                      </v-row>
+                    </v-container>
+                  </v-card-text>
+
+                  <v-card-actions>
+                    <v-spacer></v-spacer>
+                    <v-btn color="primary" text @click="departmentsDialog = false"> Tutup </v-btn>
+                  </v-card-actions>
+                </v-card>
+              </v-dialog>
+            </div>
+          </div>
         </v-col>
         <v-col cols="12" lg="9">
           <v-row justify="center" align="center">
@@ -475,7 +610,16 @@ export default {
       selectedOtherAuthors: [],
       otherAuthorsDialog: false,
       otherAuthorsSearch: null,
-      publicationType: 'all'
+      publicationType: 'all',
+      allDepartments: [],
+      isFetchingDepartmentsLoading: false,
+      selectedDepartments: [],
+      departmentsDialog: false,
+      departmentsSearch: null,
+      facultyId: null,
+      selectedFaculty: {},
+      faculties: [],
+      isFetchingFacultiesLoading: false
     }
   },
 
@@ -538,6 +682,26 @@ export default {
         ]
         return combine
       }
+    },
+
+    mappedDepartments() {
+      const shownDepartments = this.allDepartments.slice(0, 5)
+      const hiddenDepartments = this.allDepartments.slice(5)
+      const selected = hiddenDepartments.filter((k) => this.selectedDepartments.includes(k.id))
+      const shownSelected = this.allDepartments
+        .slice(selected.length ? 4 - selected.length : 5, 5)
+        .filter((k) => this.selectedDepartments.includes(k.id))
+
+      if (selected.length + shownSelected.length > 5) {
+        return selected.concat(shownSelected).slice(0, 5)
+      } else {
+        const combine = [
+          ...selected,
+          ...shownSelected,
+          ...shownDepartments.slice(0, 5 - selected.length - shownSelected.length)
+        ]
+        return combine
+      }
     }
   },
 
@@ -596,6 +760,26 @@ export default {
         this.page = 1
         this.fetchPublications()
       }, 1000)
+    },
+
+    selectedDepartments() {
+      clearTimeout(this._departmentsTimerId)
+      this._departmentsTimerId = setTimeout(() => {
+        this.page = 1
+        this.fetchPublications()
+      }, 1000)
+    },
+
+    '$route.query.facultyId'(newVal) {
+      this.facultyId = newVal
+      if (newVal) {
+        this.page = 1
+        this.facultyId = Number(newVal)
+        const faculty = this.faculties.find((e) => e.id === this.facultyId)
+        this.selectedFaculty = faculty
+        this.fetchDepartments()
+        this.fetchPublications()
+      }
     }
   },
 
@@ -604,12 +788,19 @@ export default {
     this.fetchKeywords()
     this.fetchPublishYears()
     this.fetchScholars()
+    this.fetchDepartments()
+    this.fetchFaculties()
   },
 
   mounted() {
     const search = this.$route.query.search
     if (search) {
       this.search = search
+    }
+
+    const facultyId = this.$route.query.facultyId
+    if (facultyId) {
+      this.facultyId = Number(facultyId)
     }
   },
 
@@ -627,7 +818,9 @@ export default {
           publishYear: this.selectedPublishYears.join(','),
           firstAuthors: this.selectedFirstAuthors.join(','),
           otherAuthors: this.selectedOtherAuthors.join(','),
-          publicationType: this.publicationType
+          publicationType: this.publicationType,
+          departmentIds: this.selectedDepartments.join(','),
+          facultyIds: this.facultyId
         })
         const res = a.data
         if (res && res.status) {
@@ -690,6 +883,42 @@ export default {
       } catch (e) {
       } finally {
         this.isFetchingScholarsLoading = false
+      }
+    },
+
+    async fetchDepartments() {
+      try {
+        this.isFetchingDepartmentsLoading = true
+        const a = await this.$repo.university.getDepartments({
+          facultyIds: this.facultyId
+        })
+        const res = a.data
+        if (res && res.status) {
+          this.allDepartments = res.results
+        }
+      } catch (e) {
+      } finally {
+        this.isFetchingDepartmentsLoading = false
+      }
+    },
+
+    async fetchFaculties() {
+      try {
+        this.isFetchingFacultiesLoading = true
+        const a = await this.$repo.university.getFaculties()
+        const res = a.data
+        if (res && res.status) {
+          this.faculties = res.results
+
+          if (this.facultyId && !this.selectedFaculty?.name) {
+            const faculty = this.faculties.find((e) => e.id === this.facultyId)
+            this.selectedFaculty = faculty
+            this.fetchDepartments()
+          }
+        }
+      } catch (e) {
+      } finally {
+        this.isFetchingFacultiesLoading = false
       }
     }
   }

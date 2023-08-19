@@ -15,7 +15,7 @@
               <v-text-field
                 id="publication-search"
                 v-model="search"
-                placeholder="Cari Publikasi"
+                placeholder="Cari Publikasi berdasarkan Judul atau Nama Penulis"
                 outlined
                 append-icon="mdi-magnify"
                 class="mt-4"
