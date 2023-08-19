@@ -24,15 +24,7 @@
                 <v-hover v-for="(item, i) in navItems" :key="'items' + i" v-slot="{ hover }">
                   <NuxtLink
                     :to="item.to"
-                    class="
-                      text-decoration-none text--secondary
-                      d-flex
-                      flex-column
-                      align-center
-                      text-center
-                      py-5
-                      border-bottom-transparent
-                    "
+                    class="text-decoration-none text--secondary d-flex flex-column align-center text-center py-5border-bottom-transparent"
                     exact-active-class="border-bottom-primary"
                     :class="{ 'border-bottom-primary': hover }"
                     style="gap: 8px"

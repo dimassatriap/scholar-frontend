@@ -9,17 +9,7 @@
                 <v-col
                   :cols="sideCol.col"
                   :sm="sideCol.sm"
-                  class="
-                    primary
-                    bg-pattern
-                    d-flex
-                    flex-column
-                    justify-center
-                    align-center
-                    text-center
-                    white--text
-                    pa-4 pa-sm-6
-                  "
+                  class="primary bg-pattern d-flex flex-column justify-center align-center text-center white--text pa-4 pa-sm-6"
                   :class="{ 'rounded-l-inherit': isSmAndUp }"
                   style="min-height: 180px"
                 >
