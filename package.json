@@ -12,7 +12,7 @@
     "heroku-postbuild": "NODE_OPTIONS=--openssl-legacy-provider npm run build"
   },
   "engines": {
-    "node": "16.x"
+    "node": "^14 || ^16 || ^18"
   },
   "dependencies": {
     "@nuxtjs/axios": "^5.12.2",
