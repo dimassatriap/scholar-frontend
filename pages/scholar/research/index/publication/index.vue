@@ -1,6 +1,6 @@
 <template>
   <div>
-    <YBtn large block outlined @click="isAddPublicationDialog = true">Buat Publikasi Baru</YBtn>
+    <YBtn large block outlined @click="isAddPublicationDialog = true">Tambahkan Publikasi</YBtn>
 
     <div class="my-6">
       <NuxtChild />

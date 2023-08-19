@@ -33,7 +33,7 @@
                       py-5
                       border-bottom-transparent
                     "
-                    exact-active-class="border-bottom-primary"
+                    :active-class="i > 0 ? 'border-bottom-primary' : ''"
                     :class="{ 'border-bottom-primary': hover }"
                     style="gap: 8px"
                   >
