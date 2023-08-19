@@ -11,9 +11,6 @@
     "lint": "npm run lint:js",
     "heroku-postbuild": "NODE_OPTIONS=--openssl-legacy-provider npm run build"
   },
-  "engines": {
-    "node": "16.x"
-  },
   "dependencies": {
     "@nuxtjs/axios": "^5.12.2",
     "@nuxtjs/cloudinary": "^1.0.3",
