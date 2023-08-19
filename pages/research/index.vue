@@ -9,7 +9,7 @@
             <v-text-field
               id="publication-search"
               v-model="search"
-              placeholder="Cari Publikasi berdasarkan Judul, Abstrak, atau Nama Penulis"
+              placeholder="Cari Publikasi berdasarkan Judul atau Nama Penulis"
               filled
               outlined
               append-icon="mdi-magnify"
@@ -22,7 +22,36 @@
     </div>
 
     <v-container class="">
-      <v-row>
+      <v-row v-if="!facultyId">
+        <v-col cols="12">
+          <h2 class="font-weight-medium">Fakultas</h2>
+
+          <v-list>
+            <v-list-item
+              v-for="(faculty, i) in faculties"
+              :key="'faculty-' + i"
+              class="text-decoration-none"
+              @click="$router.push({ path: '/research', query: { facultyId: faculty.id, search } })"
+            >
+              <v-list-item-action>
+                <v-icon> mdi-circle-medium </v-icon>
+              </v-list-item-action>
+              <v-list-item-title class="text-h5">{{ faculty.name }}</v-list-item-title>
+            </v-list-item>
+          </v-list>
+        </v-col>
+      </v-row>
+
+      <v-row v-else>
+        <v-col v-if="selectedFaculty" cols="12">
+          <h2 class="font-weight-medium mb-4">
+            <YBtn large fab text color="black" @click="$router.push({ path: '/research', query: { search } })">
+              <v-icon> mdi-arrow-left </v-icon>
+            </YBtn>
+            Fakultas {{ selectedFaculty.name }}
+          </h2>
+        </v-col>
+
         <v-col cols="12" lg="3">
           <div class="text-subtitle1">Filter Publikasi</div>
 
@@ -590,7 +619,11 @@ export default {
       isFetchingDepartmentsLoading: false,
       selectedDepartments: [],
       departmentsDialog: false,
-      departmentsSearch: null
+      departmentsSearch: null,
+      facultyId: null,
+      selectedFaculty: {},
+      faculties: [],
+      isFetchingFacultiesLoading: false
     }
   },
 
@@ -739,6 +772,17 @@ export default {
         this.page = 1
         this.fetchPublications()
       }, 1000)
+    },
+
+    '$route.query.facultyId'(newVal) {
+      this.facultyId = newVal
+      if (newVal) {
+        this.facultyId = Number(newVal)
+        const faculty = this.faculties.find((e) => e.id === this.facultyId)
+        this.selectedFaculty = faculty
+        this.fetchDepartments()
+        this.fetchPublications()
+      }
     }
   },
 
@@ -748,12 +792,18 @@ export default {
     this.fetchPublishYears()
     this.fetchScholars()
     this.fetchDepartments()
+    this.fetchFaculties()
   },
 
   mounted() {
     const search = this.$route.query.search
     if (search) {
       this.search = search
+    }
+
+    const facultyId = this.$route.query.facultyId
+    if (facultyId) {
+      this.facultyId = Number(facultyId)
     }
   },
 
@@ -772,7 +822,8 @@ export default {
           firstAuthors: this.selectedFirstAuthors.join(','),
           otherAuthors: this.selectedOtherAuthors.join(','),
           publicationType: this.publicationType,
-          departmentIds: this.selectedDepartments.join(',')
+          departmentIds: this.selectedDepartments.join(','),
+          facultyIds: this.facultyId
         })
         const res = a.data
         if (res && res.status) {
@@ -841,7 +892,9 @@ export default {
     async fetchDepartments() {
       try {
         this.isFetchingDepartmentsLoading = true
-        const a = await this.$repo.university.getDepartments()
+        const a = await this.$repo.university.getDepartments({
+          facultyIds: this.facultyId
+        })
         const res = a.data
         if (res && res.status) {
           this.allDepartments = res.results
@@ -849,6 +902,26 @@ export default {
       } catch (e) {
       } finally {
         this.isFetchingDepartmentsLoading = false
+      }
+    },
+
+    async fetchFaculties() {
+      try {
+        this.isFetchingFacultiesLoading = true
+        const a = await this.$repo.university.getFaculties()
+        const res = a.data
+        if (res && res.status) {
+          this.faculties = res.results
+
+          if (this.facultyId && !this.selectedFaculty?.name) {
+            const faculty = this.faculties.find((e) => e.id === this.facultyId)
+            this.selectedFaculty = faculty
+            this.fetchDepartments()
+          }
+        }
+      } catch (e) {
+      } finally {
+        this.isFetchingFacultiesLoading = false
       }
     }
   }

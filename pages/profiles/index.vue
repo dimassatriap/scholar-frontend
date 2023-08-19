@@ -4,12 +4,12 @@
       <v-container class="">
         <v-row justify="center" align="center">
           <v-col cols="12">
-            <h2 class="font-weight-medium">Temukan Profil</h2>
+            <h2 class="font-weight-medium">Temukan Dosen</h2>
 
             <v-text-field
               id="scholar-search"
               v-model="search"
-              placeholder="Cari Profile"
+              placeholder="Cari Dosen"
               filled
               outlined
               append-icon="mdi-magnify"

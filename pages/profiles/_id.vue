@@ -26,10 +26,6 @@
           {{ scholar.department.name
           }}<span v-if="scholar.department.faculty">, {{ scholar.department.faculty.name }} </span>
         </div>
-
-        <div v-if="scholar.phone" class="subtitle-1 text--secondary">
-          {{ $helpers.formatPhone(scholar.phone) }}
-        </div>
       </v-col>
     </v-row>
     <v-divider class="mt-4 mb-6"></v-divider>
