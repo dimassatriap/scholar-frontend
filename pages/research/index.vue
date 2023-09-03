@@ -1,19 +1,44 @@
 <template>
   <div>
-    <div v-if="facultyId" class="header-title">
+    <div class="header-title">
       <v-container class="">
         <v-row justify="center" align="center">
           <v-col cols="12">
-            <h2 v-if="selectedFaculty" class="font-weight-medium mb-4">
-              <YBtn large fab text color="black" @click="$router.push({ path: '/research', query: { search } })">
+            <h2 v-if="facultyId && selectedFaculty" class="font-weight-medium mb-4">
+              <YBtn
+                large
+                fab
+                text
+                color="black"
+                @click="
+                  () => {
+                    searchByFaculty = search
+                    $router.push({ path: '/research', query: { search } })
+                  }
+                "
+              >
                 <v-icon> mdi-arrow-left </v-icon>
               </YBtn>
               Fakultas {{ selectedFaculty.name }}
             </h2>
+            <h2 v-else class="font-weight-medium mb-4">Cari Publikasi</h2>
 
             <v-text-field
+              v-if="facultyId"
               id="publication-search"
               v-model="search"
+              placeholder="Cari Publikasi berdasarkan Judul atau Nama Penulis"
+              filled
+              outlined
+              append-icon="mdi-magnify"
+              background-color="white"
+              class="mt-8"
+            />
+
+            <v-text-field
+              v-else
+              id="publication-search-by-faculty"
+              v-model="searchByFaculty"
               placeholder="Cari Publikasi berdasarkan Judul atau Nama Penulis"
               filled
               outlined
@@ -33,15 +58,22 @@
 
           <v-list>
             <v-list-item
-              v-for="(faculty, i) in faculties"
+              v-for="(faculty, i) in searchByFaculty ? mappedFaculties : faculties"
               :key="'faculty-' + i"
               class="text-decoration-none"
-              @click="$router.push({ path: '/research', query: { facultyId: faculty.id, search } })"
+              @click="
+                () => {
+                  search = searchByFaculty
+                  $router.push({ path: '/research', query: { facultyId: faculty.id, search } })
+                }
+              "
             >
               <v-list-item-action>
                 <v-icon> mdi-circle-medium </v-icon>
               </v-list-item-action>
-              <v-list-item-title class="text-h5">{{ faculty.name }}</v-list-item-title>
+              <v-list-item-title class="text-h5">
+                {{ faculty.name }} <span v-if="faculty.totalPublication">({{ faculty.totalPublication }})</span>
+              </v-list-item-title>
             </v-list-item>
           </v-list>
         </v-col>
@@ -581,6 +613,7 @@ export default {
       loading: false,
       publications: [],
       search: null,
+      searchByFaculty: null,
       page: 1,
       totalPage: 1,
       selectedKeywords: [],
@@ -619,6 +652,7 @@ export default {
       facultyId: null,
       selectedFaculty: {},
       faculties: [],
+      mappedFaculties: [],
       isFetchingFacultiesLoading: false
     }
   },
@@ -709,8 +743,16 @@ export default {
     search() {
       clearTimeout(this._searchTimerId)
       this._searchTimerId = setTimeout(() => {
+        this.$router.push({ path: '/research', query: { facultyId: this.facultyId, search: this.search } })
         this.page = 1
         this.fetchPublications()
+      }, 1000)
+    },
+
+    searchByFaculty() {
+      clearTimeout(this._searchTimerId)
+      this._searchTimerId = setTimeout(() => {
+        this.fetchPublicationsByFaculty()
       }, 1000)
     },
 
@@ -839,6 +881,41 @@ export default {
       }
     },
 
+    async fetchPublicationsByFaculty() {
+      try {
+        this.loading = true
+        this.publications = []
+        const a = await this.$repo.publication.getPublications({
+          withScholars: true,
+          search: this.searchByFaculty,
+          itemsPerPage: -1
+        })
+        const res = a.data
+        if (res && res.status) {
+          const mappedFaculties = this.$helpers.deepCloneArray(this.faculties)
+          res.results?.forEach((publication) => {
+            mappedFaculties.forEach((faculty) => {
+              if (faculty.id === publication?.scholar?.department?.facultyId) {
+                if (!faculty.totalPublication) {
+                  faculty.totalPublication = 1
+                } else {
+                  faculty.totalPublication += 1
+                }
+              }
+            })
+          })
+          this.mappedFaculties = mappedFaculties
+        } else {
+          // this.errorMessage = this.$helpers.keysToCamel(res.messages)
+        }
+      } catch (e) {
+        // const res = e.response.data
+        // this.errorMessage = this.$helpers.keysToCamel(res.messages)
+      } finally {
+        this.loading = false
+      }
+    },
+
     async fetchKeywords() {
       try {
         this.isFetchingKeywordLoading = true
@@ -909,6 +986,7 @@ export default {
         const res = a.data
         if (res && res.status) {
           this.faculties = res.results
+          this.mappedFaculties = this.$helpers.deepCloneArray(res.results)
 
           if (this.facultyId && !this.selectedFaculty?.name) {
             const faculty = this.faculties.find((e) => e.id === this.facultyId)

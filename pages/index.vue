@@ -8,23 +8,13 @@
               class="text-h5 text-md-h4 font-weight-medium white--text justify-center text-center"
               style="word-break: break-word"
             >
-              Welcome to Universitas Padjadjaran
+              Welcome to Scholar Unpad
             </v-card-title>
 
             <v-card-text>
-              <v-text-field
-                id="publication-search"
-                v-model="search"
-                placeholder="Cari Publikasi berdasarkan Judul atau Nama Penulis"
-                outlined
-                append-icon="mdi-magnify"
-                class="mt-4"
-                background-color="rgba(255,255,255, 0.7)"
-                hide-details
-                rounded
-                @click:append="findPublication"
-                @keydown.enter.prevent="findPublication"
-              />
+              <div class="text-h6 text-md-h5 font-weight-medium white--text justify-center text-center">
+                Portal Publikasi Universitas Padjadjaran
+              </div>
             </v-card-text>
           </v-card>
         </div>

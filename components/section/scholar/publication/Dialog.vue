@@ -242,7 +242,13 @@
               </v-col>
 
               <v-col cols="12">
-                <YInput id="input-link" v-model="form.link" placeholder="Masukan Pranala Publikasi" label="Pranala" />
+                <YInput
+                  id="input-link"
+                  v-model="form.link"
+                  placeholder="Masukan Pranala Publikasi"
+                  label="Pranala"
+                  :rules="$helpers.formRules('required')"
+                />
               </v-col>
             </v-row>
           </v-container>

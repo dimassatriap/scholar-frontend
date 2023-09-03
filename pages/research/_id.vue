@@ -10,7 +10,12 @@
           icon-color="sred60"
         />
 
-        <h2 v-if="publication.name" class="font-weight-medium">{{ publication.name }}</h2>
+        <h2 v-if="publication.name" class="font-weight-medium">
+          <YBtn large fab text color="black" @click="$router.back()">
+            <v-icon> mdi-arrow-left </v-icon>
+          </YBtn>
+          {{ publication.name }}
+        </h2>
 
         <div
           v-if="publication.scholar"

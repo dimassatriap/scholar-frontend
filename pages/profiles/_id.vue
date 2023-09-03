@@ -8,6 +8,13 @@
       icon-color="sred60"
     />
 
+    <h3 class="font-weight-medium mb-8" role="button" @click="$router.back()">
+      <YBtn large fab text color="black">
+        <v-icon> mdi-arrow-left </v-icon>
+      </YBtn>
+      Kembali
+    </h3>
+
     <v-row align="center" justify="center">
       <v-col cols="6" sm="2">
         <YImg class="rounded-lg" aspect-ratio="1" img-default-as-avatar :src="scholar.image" />
