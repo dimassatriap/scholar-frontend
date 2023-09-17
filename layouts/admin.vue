@@ -11,6 +11,14 @@
               <v-list-item-title v-text="item.title" />
             </v-list-item-content>
           </v-list-item>
+          <v-list-item @click="refresh()">
+            <v-list-item-action>
+              <v-icon> mdi-logout </v-icon>
+            </v-list-item-action>
+            <v-list-item-content>
+              <v-list-item-title v-text="'Keluar '" />
+            </v-list-item-content>
+          </v-list-item>
         </template>
       </v-list>
     </v-navigation-drawer>
@@ -36,9 +44,10 @@
 <script>
 import allLayoutMixins from '~/mixins/all-layout'
 import breakpointMixin from '~/mixins/breakpoint'
+import adminMixin from '~/mixins/admin'
 
 export default {
-  mixins: [allLayoutMixins, breakpointMixin],
+  mixins: [allLayoutMixins, breakpointMixin, adminMixin],
   data() {
     return {
       clipped: false,
@@ -77,6 +86,12 @@ export default {
     }
   },
 
-  mounted() {}
+  mounted() {},
+
+  methods: {
+    refresh() {
+      window.location.reload(false)
+    }
+  }
 }
 </script>
