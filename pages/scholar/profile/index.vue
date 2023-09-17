@@ -27,20 +27,31 @@
                   </v-row>
                 </div>
               </v-col>
-            </v-row>
 
-            <div class="mt-4 text-body2 rounded-4 border pa-4">
-              <div class="">
-                Program Studi:
-                <span v-if="!!scholar.department">
-                  {{ `${scholar.department.name}` }}
-                  <span v-if="!!scholar.department.faculty">
-                    {{ `, ${scholar.department.faculty.name}` }}
-                  </span>
-                </span>
-                <span v-else>-</span>
-              </div>
-            </div>
+              <v-col cols="12" sm="6">
+                <div class="mt-4 text-body2 rounded-4 border pa-4 d-flex justify-space-between">
+                  <div class="">Program Studi</div>
+
+                  <div class="text-right">
+                    <span v-if="!!scholar.department">
+                      {{ `${scholar.department.name}` }}
+                      <span v-if="!!scholar.department.faculty">
+                        {{ `, ${scholar.department.faculty.name}` }}
+                      </span>
+                    </span>
+                    <span v-else>-</span>
+                  </div>
+                </div>
+              </v-col>
+
+              <v-col cols="12" sm="6">
+                <div class="mt-4 text-body2 rounded-4 border pa-4 d-flex justify-space-between">
+                  <div class="">NIP</div>
+
+                  <div class="text-right">{{ !!scholar.NIP ? scholar.NIP : '-' }}</div>
+                </div>
+              </v-col>
+            </v-row>
 
             <div class="mt-4 text-body2 rounded-4 border pa-4">
               <div class="">Alamat</div>

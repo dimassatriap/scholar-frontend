@@ -52,6 +52,8 @@
             :rules="$helpers.formRules('email')"
           />
 
+          <YInput id="NIP" v-model="form.NIP" placeholder="Masukan NIP" label="NIP" class="mb-4" />
+
           <YInput
             id="phone"
             v-model="form.phone"
@@ -93,7 +95,8 @@ export default {
         name: '',
         phone: null,
         accountId: null,
-        isValid: false
+        isValid: false,
+        NIP: null
       },
       loading: false,
       errorMessage: {}

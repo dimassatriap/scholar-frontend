@@ -180,6 +180,8 @@
             class="mb-4"
           ></v-autocomplete>
 
+          <YInput id="NIP" v-model="form.NIP" placeholder="Masukan NIP" label="NIP" class="mb-4" />
+
           <div class="mb-1 text-truncate">
             <label for="input-street-address" class="text-body2 sblack60--text"> Detail Alamat </label>
           </div>
@@ -229,7 +231,9 @@ export default {
         phone: null,
         departmentId: null,
         frontTitle: null,
-        backTitle: null
+        backTitle: null,
+        address: null,
+        NIP: null
       },
       metadataForm: {
         menuBirthDate: false,

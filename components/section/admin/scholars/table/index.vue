@@ -127,6 +127,10 @@
                       </v-col>
 
                       <v-col cols="12">
+                        <YInput id="NIP" v-model="editedItem.NIP" placeholder="Masukan NIP" label="NIP" class="mb-4" />
+                      </v-col>
+
+                      <v-col cols="12">
                         <div class="mb-1 text-truncate">
                           <label for="input-street-address" class="text-body2 sblack60--text"> Detail Alamat </label>
                         </div>
@@ -253,6 +257,7 @@ export default {
         },
         { text: 'Nama', value: 'name' },
         { text: 'Email', value: 'email' },
+        { text: 'NIP', value: 'NIP' },
         { text: 'No. Handphone', value: 'phone' },
         { text: 'Address', value: 'address' },
         { text: 'Gender', value: 'gender' },
@@ -280,7 +285,8 @@ export default {
         birthDate: null,
         createdAt: null,
         updatedAt: null,
-        validated: false
+        validated: false,
+        NIP: null
       },
       defaultItem: {
         id: null,
@@ -292,7 +298,8 @@ export default {
         birthDate: null,
         createdAt: null,
         updatedAt: null,
-        validated: false
+        validated: false,
+        NIP: null
       },
       metadataForm: {
         menuBirthDate: false
