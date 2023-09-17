@@ -165,22 +165,35 @@
                 <div class="mb-1 text-truncate">
                   <label for="input-co-author" class="text-body2 sblack60--text"> Penulis Lainnya </label>
                 </div>
-                <v-autocomplete
+                <v-combobox
                   id="input-co-author"
-                  v-model="form.coAuthor"
-                  :loading="isSearchingScholarLoading"
+                  v-model="formCoAuthor"
                   :items="scholars"
+                  :loading="isSearchingScholarLoading"
+                  :search-input.sync="searchCoAuthor"
                   multiple
                   hide-selected
+                  chips
                   item-text="fullName"
                   item-value="fullName"
                   placeholder="Masukan Penulis Lainnya"
                   no-data-text="Tidak ada penulis lainnya"
-                  chips
                   filled
                   outlined
                   hide-details="auto"
+                  return-object
                 >
+                  <template v-slot:no-data>
+                    <v-list-item>
+                      <v-list-item-content>
+                        <v-list-item-title>
+                          Belum ada penulis "<strong>{{ searchCoAuthor }}</strong
+                          >". Tekan <kbd>enter</kbd> untuk menambahkan.
+                        </v-list-item-title>
+                      </v-list-item-content>
+                    </v-list-item>
+                  </template>
+
                   <template v-slot:selection="data">
                     <v-chip
                       v-bind="data.attrs"
@@ -189,10 +202,10 @@
                       @click="data.select"
                       @click:close="remove(data.item)"
                     >
-                      <v-avatar left>
+                      <v-avatar v-if="data.item.image" left>
                         <v-img :src="data.item.image"></v-img>
                       </v-avatar>
-                      {{ data.item.fullName }}
+                      {{ data.item.fullName || data.item }}
                     </v-chip>
                   </template>
 
@@ -204,7 +217,7 @@
                       <v-list-item-title>{{ data.item.fullName }}</v-list-item-title>
                     </v-list-item-content>
                   </template>
-                </v-autocomplete>
+                </v-combobox>
               </v-col>
 
               <v-col cols="12">
@@ -313,6 +326,7 @@ export default {
         menuPublishDate: false
       },
       activePicker: null,
+      formCoAuthor: null,
       formKeywords: null,
       isValid: false,
       isSubmitLoading: false,
@@ -323,7 +337,8 @@ export default {
       isSearchingScholarLoading: false,
       isSearchingKeywordLoading: false,
       searchKeyword: null,
-      publicationType: 'journal'
+      publicationType: 'journal',
+      searchCoAuthor: null
     }
   },
 
@@ -356,6 +371,10 @@ export default {
 
     'metadataForm.menuPublishDate'(val) {
       val && setTimeout(() => (this.activePicker = 'YEAR'))
+    },
+
+    formCoAuthor(val) {
+      console.log('formCoAuthor: ', val)
     }
   },
 
@@ -392,6 +411,7 @@ export default {
         publishDate: null,
         journalEdition: null
       }
+      this.formCoAuthor = null
       this.formKeywords = null
       this.publicationType = 'journal'
 
@@ -402,7 +422,15 @@ export default {
       this.form = {
         ...publication
       }
-      if (publication.coAuthor) this.form.coAuthor = publication.coAuthor.split(',,')
+      if (publication.coAuthor) {
+        this.formCoAuthor = []
+        const coAuthor = publication.coAuthor.split(',,')
+        coAuthor.forEach((author, i) => {
+          const find = this.scholars.find((e) => e.fullName === author)
+          if (find) this.formCoAuthor[i] = find
+          else this.formCoAuthor[i] = author
+        })
+      }
       if (publication.keywords?.length) this.formKeywords = publication.keywords
       if (publication.publishDate) {
         this.form.publishDate = this.$moment(publication.publishDate).format('YYYY-MM-DD')
@@ -452,8 +480,8 @@ export default {
     },
 
     remove(item) {
-      const index = this.form.coAuthor.indexOf(item.fullName)
-      if (index >= 0) this.form.coAuthor.splice(index, 1)
+      const index = this.formCoAuthor.indexOf(item)
+      if (index >= 0) this.formCoAuthor.splice(index, 1)
     },
 
     async submit() {
@@ -462,7 +490,13 @@ export default {
         this.errorMessage = {}
         // console.log('this.form: ', this.form)
         try {
-          if (this.form.coAuthor) this.form.coAuthor = this.form.coAuthor.join(',,')
+          if (this.formCoAuthor) {
+            this.form.coAuthor = this.formCoAuthor.map((author) => {
+              if (author?.fullName) return author.fullName
+              else return author
+            })
+            this.form.coAuthor = this.form.coAuthor.join(',,')
+          }
           if (this.formKeywords != null) {
             this.form.keywords = this.formKeywords.map((k) => {
               if (k?.id) return k.id
